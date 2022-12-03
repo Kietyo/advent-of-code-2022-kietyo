@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.7.22"
+    kotlin("jvm") version "1.8.0-Beta"
 }
 
 repositories {
@@ -16,4 +16,9 @@ tasks {
     wrapper {
         gradleVersion = "7.6"
     }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    // ...
+    kotlinOptions.languageVersion = "1.9"
 }
