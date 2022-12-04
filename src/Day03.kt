@@ -32,20 +32,20 @@ fun main() {
     }
 
     fun part2(input: List<String>): Unit {
-        val ans = input.asSequence().windowed(3, step=3).map { window ->
+        val ans = input.chunked(3).sumOf { window ->
             window.map { it.toSet() }.reduce { acc, chars ->
                 acc.intersect(chars)
             }.first().toPriority()
-        }.sum()
+        }
         println(ans)
     }
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("day3_test")
-//    part1(testInput)
-//    part2(testInput)
+    part1(testInput)
+    part2(testInput)
 
     val input = readInput("day3_input")
 //    part1(input)
-    part2(input)
+//    part2(input)
 }

@@ -14,7 +14,6 @@ sealed interface Option {
                 Scissors -> Result.WIN
             }
         }
-
     }
     object Scissors : Option {
         override val points: Int = 3
@@ -38,11 +37,10 @@ sealed interface Option {
         }
     }
 
-    abstract fun battle(other: Option): Result
+    fun battle(other: Option): Result
     fun getOtherOptionToGetResult(result: Result): Option {
         return ALL.first {
-            val testResult = it.battle(this)
-             testResult == result
+            it.battle(this) == result
         }
     }
     abstract val points: Int
@@ -105,10 +103,10 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("day2_test")
-//    part1(testInput)
-//    part2(testInput)
+    part1(testInput)
+    part2(testInput)
 
     val input = readInput("day2_input")
 //    part1(input)
-    part2(input)
+//    part2(input)
 }
