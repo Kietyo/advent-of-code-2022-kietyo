@@ -2,54 +2,26 @@
 
 fun main() {
     fun part1(input: List<String>): Unit {
-//        val stackString = """
-//,D,
-//N,C,
-//Z,M,P
-//        """.trimIndent()
-        val stackString = """
-,,,,M,,W,M,
-,,,L,Q,S,C,R,
-,,,Q,F,F,T,N,S
-,N,,V,V,H,L,J,D
-,D,D,W,P,G,R,D,F
-T,T,M,G,G,Q,N,W,L
-Z,H,F,J,D,Z,S,H,Q
-B,V,B,T,W,V,Z,Z,M
-        """.trimIndent()
 
-        val split = stackString.split("\n").reversed().map { it.split(",") }
-        val stacks: List<MutableList<String>> = mutableListOf<MutableList<String>>().run {
-            repeat(split.first().size) {
-                add(mutableListOf())
-            }
-            this
-        }
-
-        split.forEach {
-            println(it)
-            it.forEachIndexed { index, s ->
-                if (s.isNotEmpty()) {
-                    stacks[index].add(s)
-                }
-            }
-        }
-        println(stacks)
-
-        val regex = Regex("move (\\d+) from (\\d+) to (\\d+)")
-        input.forEach {
-            val matchResult = regex.matchEntire(it)
-            val (_, count, stackIndex1, stackIndex2) = matchResult!!.groupValues.map { it.toIntOrNull() ?: 0 }
-            println("count: $count, stackIndex1: $stackIndex1, stackIndex2: $stackIndex2")
+//        val stacks = listOf(
+//            "ZN", "MCD", "P"
+//        ).map { it.toMutableList() }
+        val stacks = listOf(
+            "BZT", "VHTDN", "BFMD", "TJGWVQL", "WDGPVFQM", "VZQGHFS", "ZSNRLTCW", "ZHWDJNRM", "MQLFDS"
+        ).map { it.toMutableList() }
+        input.forEach { line ->
+            val matchResult = line.split(" ")
+            val count = matchResult[1].toInt()
+            val stackIndex1 = matchResult[3].toInt() - 1
+            val stackIndex2 = matchResult[5].toInt() - 1
             repeat(count) {
-                val e = stacks[stackIndex1 - 1].removeLast()
-                stacks[stackIndex2 - 1].add(e)
+                stacks[stackIndex2].add(stacks[stackIndex1].removeLast())
             }
         }
 
         println(stacks.map { it.last() }.joinToString(""))
 
-        println(split)
+        println(stacks)
     }
 
     fun part2(input: List<String>): Unit {
@@ -58,33 +30,9 @@ B,V,B,T,W,V,Z,Z,M
 //N,C,
 //Z,M,P
 //        """.trimIndent()
-        val stackString = """
-,,,,M,,W,M,
-,,,L,Q,S,C,R,
-,,,Q,F,F,T,N,S
-,N,,V,V,H,L,J,D
-,D,D,W,P,G,R,D,F
-T,T,M,G,G,Q,N,W,L
-Z,H,F,J,D,Z,S,H,Q
-B,V,B,T,W,V,Z,Z,M
-        """.trimIndent()
-
-        val split = stackString.split("\n").reversed().map { it.split(",") }
-        val stacks: List<MutableList<String>> = mutableListOf<MutableList<String>>().run {
-            repeat(split.first().size) {
-                add(mutableListOf())
-            }
-            this
-        }
-
-        split.forEach {
-            println(it)
-            it.forEachIndexed { index, s ->
-                if (s.isNotEmpty()) {
-                    stacks[index].add(s)
-                }
-            }
-        }
+        val stacks = listOf(
+            "BZT", "VHTDN", "BFMD", "TJGWVQL", "WDGPVFQM", "VZQGHFS", "ZSNRLTCW", "ZHWDJNRM", "MQLFDS"
+        ).map { it.toMutableList() }
         println(stacks)
 
         val regex = Regex("move (\\d+) from (\\d+) to (\\d+)")
@@ -92,7 +40,7 @@ B,V,B,T,W,V,Z,Z,M
             val matchResult = regex.matchEntire(it)
             val (_, count, stackIndex1, stackIndex2) = matchResult!!.groupValues.map { it.toIntOrNull() ?: 0 }
             println("count: $count, stackIndex1: $stackIndex1, stackIndex2: $stackIndex2")
-            val tempStack = mutableListOf<String>()
+            val tempStack = mutableListOf<Char>()
             repeat(count) {
                 val e = stacks[stackIndex1 - 1].removeLast()
                 tempStack.add(e)
@@ -103,8 +51,6 @@ B,V,B,T,W,V,Z,Z,M
         }
 
         println(stacks.map { it.last() }.joinToString(""))
-
-        println(split)
     }
 
     val dayString = "day5"
@@ -115,6 +61,6 @@ B,V,B,T,W,V,Z,Z,M
 //    part2(testInput)
 
     val input = readInput("${dayString}_input")
-//    part1(input)
+    part1(input)
     part2(input)
 }
