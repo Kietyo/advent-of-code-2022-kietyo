@@ -46,7 +46,6 @@ fun main() {
                 }
             }
         }
-
     }
 
     fun part1(input: List<String>): Unit {
