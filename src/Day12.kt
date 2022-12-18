@@ -1,7 +1,35 @@
 import java.util.LinkedList
 import java.util.PriorityQueue
 
-typealias IntPoint = Pair<Int, Int>
+
+@JvmInline
+value class IntPoint(
+    private val pair: Pair<Int, Int>
+): Comparable<IntPoint> {
+    constructor(x: Int, y: Int): this(x to y)
+    fun copy(first: Int = pair.first,
+             second: Int = pair.second) = IntPoint(first to second)
+
+    val x get() = pair.first
+    val y get() = pair.second
+    val first get() = pair.first
+    val second get() = pair.second
+    override fun compareTo(other: IntPoint): Int {
+        if (first == other.first) {
+            return second.compareTo(other.second)
+        }
+        if (second == other.second) {
+            return first.compareTo(other.first)
+        }
+
+        val xComp = first.compareTo(other.first)
+        if (xComp == 0) {
+            return second.compareTo(other.second)
+        }
+        return xComp
+    }
+
+}
 
 class Grid<T : Any>(
     val data: List<List<T>>
@@ -30,10 +58,10 @@ class Grid<T : Any>(
         }
     }
 
-    fun find(v: T): Pair<Int, Int> {
+    fun find(v: T): IntPoint{
         data.forEachIndexed { y, chars ->
             chars.forEachIndexed { x, c ->
-                if (c == v) return x to y
+                if (c == v) return x toip y
             }
         }
         TODO()
@@ -67,14 +95,10 @@ class Grid<T : Any>(
 
         while (statesToExplore.isNotEmpty()) {
             val currMinNode = statesToExplore.poll()!!
-            if (currMinNode.point == 88 to 20) {
-                println("went here?")
-            }
+
             val nextStates = this.nextStatesFn(currMinNode.point)
             nextStates.forEach loop@{
-                if (it == 88 to 20) {
-                    println("went here?!")
-                }
+
                 val currBest = pointToMinLengthFromSource.getOrDefault(it, Int.MAX_VALUE)
                 val alt = currMinNode.distance + 1
                 if (alt < currBest) {
@@ -92,7 +116,7 @@ class Grid<T : Any>(
                 println()
                 print("${y.toString().padStart(3, '0')}: ")
             }
-            if (pointToMinLengthFromSource.containsKey(x to y)) {
+            if (pointToMinLengthFromSource.containsKey(x toip y)) {
                 print('X')
             } else {
                 print('O')
@@ -118,9 +142,6 @@ class Grid<T : Any>(
             val currDist = pointToMinLengthFromSource[currPoint]!!
             val nextStates = this.nextStatesFn(currPoint)
             nextStates.forEach loop@{
-                if (it == 88 to 20) {
-                    println("went here?!")
-                }
                 val currBest = pointToMinLengthFromSource.getOrDefault(it, Int.MAX_VALUE)
                 val alt = currDist + 1
                 if (alt < currBest) {
@@ -139,6 +160,8 @@ class Grid<T : Any>(
         )
     }
 }
+
+private infix fun Int.toip(y: Int) = IntPoint(this to y)
 
 fun main() {
 
@@ -180,7 +203,7 @@ fun main() {
                 print("${y.toString().padStart(3, '0')}: ")
             }
             if (value == 'l') {
-                if (result.pointToMinDist.containsKey(x to y)) {
+                if (result.pointToMinDist.containsKey(x toip y)) {
                     print('X')
                 } else {
                     print('O')
@@ -204,7 +227,7 @@ fun main() {
 
         val aPoints = mutableListOf<IntPoint>()
         grid.forEach { x, y, value, gotNextRow ->
-            if (value == 'a') aPoints.add(x to y)
+            if (value == 'a') aPoints.add(x toip y)
         }
 
         val dists = aPoints.map {
