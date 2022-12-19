@@ -14,6 +14,11 @@ value class IntPoint(
     val y get() = pair.second
     val first get() = pair.first
     val second get() = pair.second
+
+    val oneDown get() = IntPoint(x, y + 1)
+    val oneDownOneLeft get() = IntPoint(x - 1, y + 1)
+    val oneDownOneRight get() = IntPoint(x + 1, y + 1)
+
     override fun compareTo(other: IntPoint): Int {
         if (first == other.first) {
             return second.compareTo(other.second)
@@ -161,7 +166,7 @@ class Grid<T : Any>(
     }
 }
 
-private infix fun Int.toip(y: Int) = IntPoint(this to y)
+infix fun Int.toip(y: Int) = IntPoint(this to y)
 
 fun main() {
 
