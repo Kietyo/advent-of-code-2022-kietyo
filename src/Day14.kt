@@ -23,19 +23,21 @@ class IntPointRange(p1: IntPoint, p2: IntPoint) : ClosedRange<IntPoint> {
         }
     }
 
-    private val isXAligned get() = start.x == endInclusive.x
-    private val isYAligned get() = start.y == endInclusive.y
+    private val isXAligned = start.x == endInclusive.x
+    private val isYAligned = start.y == endInclusive.y
+    val yRange = start.y..endInclusive.y
+    val xRange = start.x..endInclusive.x
 
     override fun contains(value: IntPoint): Boolean {
         when {
             isXAligned -> {
                 if (value.x != start.x) return false
-                return value.y in start.y..endInclusive.y
+                return value.y in yRange
             }
 
             isYAligned -> {
                 if (value.y != start.y) return false
-                return value.x in start.x..endInclusive.x
+                return value.x in xRange
             }
         }
         return false
@@ -56,19 +58,17 @@ data class Simulator(
     val pointSequences: List<List<IntPointRange>>,
     val hasFloor: Boolean
 ) {
-    val grains: MutableList<IntPoint> = mutableListOf()
+    val grains: MutableSet<IntPoint> = mutableSetOf()
 
-    fun pointIsBlocked(p: IntPoint): Boolean {
+    private fun pointIsBlocked(p: IntPoint): Boolean {
         return pointIsBlockedByGrains(p) || pointIsBlockedByWalls(p) || pointIsBlockedByFloor(p)
     }
 
-    fun pointIsBlockedByGrains(p: IntPoint): Boolean {
-        return grains.any {
-            it == p
-        }
+    private fun pointIsBlockedByGrains(p: IntPoint): Boolean {
+        return grains.contains(p)
     }
 
-    fun pointIsBlockedByWalls(p: IntPoint): Boolean {
+    private fun pointIsBlockedByWalls(p: IntPoint): Boolean {
         return pointSequences.any { ranges ->
             ranges.any {
                 p in it
@@ -83,18 +83,23 @@ data class Simulator(
         return false
     }
 
-    fun nextState(currPoint: IntPoint): IntPoint? {
-        val oneDown = currPoint.oneDown
-        if (!pointIsBlocked(oneDown)) {
-            return oneDown
+    private fun nextState(currPoint: IntPoint): IntPoint? {
+        val copy = currPoint.copy()
+        copy.y++
+        if (!pointIsBlocked(copy)) {
+            return copy
         }
-        val oneDownOneLeft = currPoint.oneDownOneLeft
-        if (!pointIsBlocked(oneDownOneLeft)) {
-            return oneDownOneLeft
+
+        // Down, left
+        copy.x--
+        if (!pointIsBlocked(copy)) {
+            return copy
         }
-        val oneDownOneRight = currPoint.oneDownOneRight
-        if (!pointIsBlocked(oneDownOneRight)) {
-            return oneDownOneRight
+
+        // Down, right
+        copy.x += 2
+        if (!pointIsBlocked(copy)) {
+            return copy
         }
         return null
     }
@@ -239,6 +244,7 @@ fun main() {
 
         var it = 0
         while (true) {
+//            if (it == 20000) break
             when (val sand = simulator.dropSand()) {
                 DropSandResult.BlockedAtStart -> {
                     println("Sand ${it + 1} is blocked at source!")

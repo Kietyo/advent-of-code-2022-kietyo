@@ -2,18 +2,16 @@ import java.util.LinkedList
 import java.util.PriorityQueue
 
 
-@JvmInline
-value class IntPoint(
-    private val pair: Pair<Int, Int>
+data class IntPoint(
+    var x: Int,
+    var y: Int
 ): Comparable<IntPoint> {
-    constructor(x: Int, y: Int): this(x to y)
-    fun copy(first: Int = pair.first,
-             second: Int = pair.second) = IntPoint(first to second)
+    constructor(pair: Pair<Int, Int>): this(pair.first, pair.second)
+    fun copy2(first: Int = x,
+              second: Int = y) = IntPoint(first, second)
 
-    val x get() = pair.first
-    val y get() = pair.second
-    val first get() = pair.first
-    val second get() = pair.second
+    val first get() = x
+    val second get() = y
 
     val oneDown get() = IntPoint(x, y + 1)
     val oneDownOneLeft get() = IntPoint(x - 1, y + 1)
@@ -183,10 +181,10 @@ fun main() {
             else -> 'a'..(currChar + 1)
         }
         val possibleStates = listOf(
-            point.copy(first = point.first + 1),
-            point.copy(first = point.first - 1),
-            point.copy(second = point.second + 1),
-            point.copy(second = point.second - 1),
+            point.copy2(first = point.first + 1),
+            point.copy2(first = point.first - 1),
+            point.copy2(second = point.second + 1),
+            point.copy2(second = point.second - 1),
         )
         return possibleStates.filter {
             getOrDefault(it) { '?' }.run {
