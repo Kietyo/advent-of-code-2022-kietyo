@@ -1,6 +1,6 @@
 import java.util.LinkedList
 import java.util.PriorityQueue
-
+import kotlin.math.abs
 
 data class IntPoint(
     var x: Int,
@@ -16,6 +16,14 @@ data class IntPoint(
     val oneDown get() = IntPoint(x, y + 1)
     val oneDownOneLeft get() = IntPoint(x - 1, y + 1)
     val oneDownOneRight get() = IntPoint(x + 1, y + 1)
+
+    fun manhattanDistance(other: IntPoint): Int {
+        return manhattanDistance(other.x, other.y)
+    }
+
+    fun manhattanDistance(otherX: Int, otherY: Int): Int {
+        return abs(x - otherX) + abs(y - otherY)
+    }
 
     override fun compareTo(other: IntPoint): Int {
         if (first == other.first) {
