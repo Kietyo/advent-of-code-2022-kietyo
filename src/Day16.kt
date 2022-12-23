@@ -1,3 +1,8 @@
+enum class Turn {
+    MINE,
+    ELEPHANT
+}
+
 fun main() {
     data class ValveNode(
         val name: String,
@@ -14,49 +19,122 @@ fun main() {
     }
 
     data class State(
-        val currentNode: String,
+        val myCurrentValvePosition: String,
+        val elephantPosition: String,
+        val turn: Turn,
         val minsLeft: Int,
         val openedValves: Set<String>
     )
+
+    val TEMP_ELEPHANT_NAME = "ELEPHANT"
 
     val cache = mutableMapOf<State, Int>()
 
     data class OptimizationContext(
         val nameToValveNode: Map<String, ValveNode>
     ) {
+        var currBestMax = 0
+
         fun optimize(state: State): Int {
             require(state.minsLeft >= 0)
             if (state.minsLeft == 0) {
                 return 0
             }
 
-            if (state in cache) return cache[state]!!
-
-            val currFlowRateSum = state.openedValves.sumOf {
-                nameToValveNode[it]!!.flowRate
+            if (cache.size % 10000 == 0) {
+                println("cache size: ${cache.size}, currBestMax: $currBestMax")
             }
 
-            val currentValveNode = nameToValveNode[state.currentNode]!!
+            if (state in cache) return cache[state]!!
 
-            val max = if (state.currentNode in state.openedValves || currentValveNode.flowRate == 0) 0 else optimize(
-                // Open this valve
-                State(
-                    state.currentNode,
-                    state.minsLeft - 1,
-                    state.openedValves + state.currentNode
+            val myCurrentValveNode = nameToValveNode[state.myCurrentValvePosition]!!
+            val elephantValveNode = nameToValveNode[state.elephantPosition]!!
+
+            val max = when (state.turn) {
+                Turn.MINE -> if (state.myCurrentValvePosition in state.openedValves || myCurrentValveNode.flowRate == 0) 0 else optimize(
+                    // Open this valve
+                    State(
+                        state.myCurrentValvePosition,
+                        state.elephantPosition,
+                        Turn.ELEPHANT,
+                        state.minsLeft,
+                        state.openedValves + state.myCurrentValvePosition,
+                    )
                 )
-            )
 
-            val bestMax = currFlowRateSum + maxOf(currentValveNode.connectedValves.maxOf {
-                optimize(State(it, state.minsLeft - 1, state.openedValves))
-            }, max)
-            cache[state] = bestMax
+                Turn.ELEPHANT -> if (state.elephantPosition in state.openedValves || elephantValveNode.flowRate == 0) 0 else optimize(
+                    // Open this valve
+                    State(
+                        state.myCurrentValvePosition,
+                        state.elephantPosition,
+                        Turn.MINE,
+                        state.minsLeft - 1,
+                        state.openedValves + state.elephantPosition
+                    )
+                )
+            }
 
-            return bestMax
+            val currFlowRateSum = if (state.turn == Turn.MINE) state.openedValves.sumOf {
+                nameToValveNode[it]!!.flowRate
+            } else 0
+
+            val currentBestMaxBelow =  + when (state.turn) {
+                Turn.MINE -> {
+                    currFlowRateSum + maxOf(myCurrentValveNode.connectedValves.maxOf {
+                        optimize(
+                            State(
+                                it,
+                                state.elephantPosition,
+                                Turn.ELEPHANT,
+                                state.minsLeft,
+                                state.openedValves
+                            )
+                        )
+                    }, max)
+                }
+
+                Turn.ELEPHANT -> currFlowRateSum + maxOf(elephantValveNode.connectedValves.maxOf {
+                    optimize(
+                        State(
+                            state.myCurrentValvePosition,
+                            it,
+                            Turn.MINE,
+                            state.minsLeft - 1,
+                            state.openedValves
+                        )
+                    )
+                }, max)
+            }
+
+            if (state.turn == Turn.MINE) {
+                cache[state] = currentBestMaxBelow
+            }
+
+            currBestMax = maxOf(currBestMax, currentBestMaxBelow)
+
+            return currentBestMaxBelow
         }
     }
 
     fun part1(input: List<String>): Unit {
+        val valveNodes = input.map { it.toValveNode() }
+        val nameToValveNode = valveNodes.associate {
+            it.name to it
+        }.toMutableMap()
+        nameToValveNode[TEMP_ELEPHANT_NAME] = ValveNode(
+            TEMP_ELEPHANT_NAME, 0, listOf(TEMP_ELEPHANT_NAME)
+        )
+
+        println(valveNodes)
+        println(valveNodes.joinToString("\n"))
+        println(nameToValveNode)
+
+        val opt = OptimizationContext(nameToValveNode)
+
+        println(opt.optimize(State("AA", TEMP_ELEPHANT_NAME, Turn.MINE, 30, emptySet())))
+    }
+
+    fun part2(input: List<String>): Unit {
         val valveNodes = input.map { it.toValveNode() }
         val nameToValveNode = valveNodes.associate {
             it.name to it
@@ -68,23 +146,19 @@ fun main() {
 
         val opt = OptimizationContext(nameToValveNode)
 
-        println(opt.optimize(State("AA", 30, emptySet())))
-    }
-
-    fun part2(input: List<String>): Unit {
-
+        println(opt.optimize(State("AA", "AA", Turn.MINE, 26, emptySet())))
     }
 
     val dayString = "day16"
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("${dayString}_test")
-//    part1(testInput)
-    //    part2(testInput)
+    //    part1(testInput)
+//            part2(testInput)
 
     val input = readInput("${dayString}_input")
-            part1(input)
-    //        part2(input)
+    //            part1(input)
+    part2(input)
 }
 
 
