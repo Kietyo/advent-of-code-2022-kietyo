@@ -2,10 +2,10 @@ import kotlin.math.abs
 
 fun main() {
     data class Sensor(
-        val pos: IntPoint,
+        val pos: MutableIntPoint,
         val manhattanDistance: Int
     ) {
-        fun isWithinRange(other: IntPoint): Boolean {
+        fun isWithinRange(other: MutableIntPoint): Boolean {
             return isWithinRange(other.x, other.y)
         }
 
@@ -30,7 +30,7 @@ fun main() {
 
         var leftMostX = Int.MAX_VALUE
         var rightMostX = Int.MIN_VALUE
-        val beaconPositions = mutableSetOf<IntPoint>()
+        val beaconPositions = mutableSetOf<MutableIntPoint>()
         val sensors = input.map {
             val (x1, y1, x2, y2) = regex.find(it)!!.run { groupValues.drop(1) }.toList()
             val sensorPos = x1.toInt() toip y1.toInt()
@@ -72,7 +72,7 @@ fun main() {
     fun part2(input: List<String>): Unit {
         var leftMostX = Int.MAX_VALUE
         var rightMostX = Int.MIN_VALUE
-        val beaconPositions = mutableSetOf<IntPoint>()
+        val beaconPositions = mutableSetOf<MutableIntPoint>()
         val sensors = input.map {
             val (x1, y1, x2, y2) = regex.find(it)!!.run { groupValues.drop(1) }.toList()
             val sensorPos = x1.toInt() toip y1.toInt()

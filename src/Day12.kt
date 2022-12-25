@@ -2,22 +2,22 @@ import java.util.LinkedList
 import java.util.PriorityQueue
 import kotlin.math.abs
 
-data class IntPoint(
+data class MutableIntPoint(
     var x: Int,
     var y: Int
-): Comparable<IntPoint> {
+): Comparable<MutableIntPoint> {
     constructor(pair: Pair<Int, Int>): this(pair.first, pair.second)
     fun copy2(first: Int = x,
-              second: Int = y) = IntPoint(first, second)
+              second: Int = y) = MutableIntPoint(first, second)
 
     val first get() = x
     val second get() = y
 
-    val oneDown get() = IntPoint(x, y + 1)
-    val oneDownOneLeft get() = IntPoint(x - 1, y + 1)
-    val oneDownOneRight get() = IntPoint(x + 1, y + 1)
+    val oneDown get() = MutableIntPoint(x, y + 1)
+    val oneDownOneLeft get() = MutableIntPoint(x - 1, y + 1)
+    val oneDownOneRight get() = MutableIntPoint(x + 1, y + 1)
 
-    fun manhattanDistance(other: IntPoint): Int {
+    fun manhattanDistance(other: MutableIntPoint): Int {
         return manhattanDistance(other.x, other.y)
     }
 
@@ -25,7 +25,7 @@ data class IntPoint(
         return abs(x - otherX) + abs(y - otherY)
     }
 
-    override fun compareTo(other: IntPoint): Int {
+    override fun compareTo(other: MutableIntPoint): Int {
         if (first == other.first) {
             return second.compareTo(other.second)
         }
@@ -49,12 +49,12 @@ class Grid<T : Any>(
         get() = data.size
     val numColumns: Int get() = data.first().size
 
-    operator fun get(point: IntPoint): T = get(point.first, point.second)
+    operator fun get(point: MutableIntPoint): T = get(point.first, point.second)
     operator fun get(x: Int, y: Int): T {
         return data[y][x]
     }
 
-    fun getOrDefault(point: IntPoint, default: () -> T): T {
+    fun getOrDefault(point: MutableIntPoint, default: () -> T): T {
         return data.getOrNull(point.second)?.getOrNull(point.first)
             ?: default()
     }
@@ -69,7 +69,7 @@ class Grid<T : Any>(
         }
     }
 
-    fun find(v: T): IntPoint{
+    fun find(v: T): MutableIntPoint{
         data.forEachIndexed { y, chars ->
             chars.forEachIndexed { x, c ->
                 if (c == v) return x toip y
@@ -79,16 +79,16 @@ class Grid<T : Any>(
     }
 
     data class DijkstraResult(
-        val source: IntPoint,
-        val pointToMinDist: Map<IntPoint, Int>,
-        val pointToPrev: Map<IntPoint, IntPoint>
+        val source: MutableIntPoint,
+        val pointToMinDist: Map<MutableIntPoint, Int>,
+        val pointToPrev: Map<MutableIntPoint, MutableIntPoint>
     )
 
-    fun dijkstra(source: IntPoint, nextStatesFn: Grid<T>.(point: IntPoint) -> List<IntPoint>): DijkstraResult {
-        data class DNode(val point: IntPoint, val distance: Int)
+    fun dijkstra(source: MutableIntPoint, nextStatesFn: Grid<T>.(point: MutableIntPoint) -> List<MutableIntPoint>): DijkstraResult {
+        data class DNode(val point: MutableIntPoint, val distance: Int)
 
-        val pointToMinLengthFromSource = mutableMapOf<IntPoint, Int>()
-        val pointToPrev = mutableMapOf<IntPoint, IntPoint>()
+        val pointToMinLengthFromSource = mutableMapOf<MutableIntPoint, Int>()
+        val pointToPrev = mutableMapOf<MutableIntPoint, MutableIntPoint>()
 
         val statesToExplore = PriorityQueue<DNode>(object : Comparator<DNode> {
             override fun compare(o1: DNode, o2: DNode): Int {
@@ -139,11 +139,11 @@ class Grid<T : Any>(
         )
     }
 
-    fun bfs(source: IntPoint, nextStatesFn: Grid<T>.(point: IntPoint) -> List<IntPoint>): DijkstraResult {
-        val pointToMinLengthFromSource = mutableMapOf<IntPoint, Int>()
-        val pointToPrev = mutableMapOf<IntPoint, IntPoint>()
+    fun bfs(source: MutableIntPoint, nextStatesFn: Grid<T>.(point: MutableIntPoint) -> List<MutableIntPoint>): DijkstraResult {
+        val pointToMinLengthFromSource = mutableMapOf<MutableIntPoint, Int>()
+        val pointToPrev = mutableMapOf<MutableIntPoint, MutableIntPoint>()
 
-        val queue = LinkedList<IntPoint>()
+        val queue = LinkedList<MutableIntPoint>()
         queue.add(source)
 
         pointToMinLengthFromSource[source] = 0
@@ -172,11 +172,11 @@ class Grid<T : Any>(
     }
 }
 
-infix fun Int.toip(y: Int) = IntPoint(this to y)
+infix fun Int.toip(y: Int) = MutableIntPoint(this to y)
 
 fun main() {
 
-    val fn = fun Grid<Char>.(point: IntPoint): List<IntPoint> {
+    val fn = fun Grid<Char>.(point: MutableIntPoint): List<MutableIntPoint> {
         val currChar = get(point)
         val nextChar = when (currChar) {
             'S' -> 'a'
@@ -204,8 +204,8 @@ fun main() {
     fun part1(input: List<String>): Unit {
         val grid = Grid(input.map { it.toList() })
         println(grid.data.joinToString("\n"))
-        val startPoint: IntPoint = grid.find('S')
-        val endPoint: IntPoint = grid.find('E')
+        val startPoint: MutableIntPoint = grid.find('S')
+        val endPoint: MutableIntPoint = grid.find('E')
 
         val result = grid.bfs(startPoint, fn)
         grid.forEach { x, y, value, gotNextRow ->
@@ -233,10 +233,10 @@ fun main() {
     fun part2(input: List<String>): Unit {
         val grid = Grid(input.map { it.toList() })
         println(grid.data.joinToString("\n"))
-        val startPoint: IntPoint = grid.find('S')
-        val endPoint: IntPoint = grid.find('E')
+        val startPoint: MutableIntPoint = grid.find('S')
+        val endPoint: MutableIntPoint = grid.find('E')
 
-        val aPoints = mutableListOf<IntPoint>()
+        val aPoints = mutableListOf<MutableIntPoint>()
         grid.forEach { x, y, value, gotNextRow ->
             if (value == 'a') aPoints.add(x toip y)
         }

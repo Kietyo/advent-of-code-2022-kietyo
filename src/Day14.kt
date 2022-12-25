@@ -1,6 +1,6 @@
-class IntPointRange(p1: IntPoint, p2: IntPoint) : ClosedRange<IntPoint> {
-    override val start: IntPoint
-    override val endInclusive: IntPoint
+class IntPointRange(p1: MutableIntPoint, p2: MutableIntPoint) : ClosedRange<MutableIntPoint> {
+    override val start: MutableIntPoint
+    override val endInclusive: MutableIntPoint
 
     init {
         require(p1.x == p2.x || p1.y == p2.y)
@@ -8,15 +8,15 @@ class IntPointRange(p1: IntPoint, p2: IntPoint) : ClosedRange<IntPoint> {
             p1.x == p2.x -> {
                 val topMostY = minOf(p1.y, p2.y)
                 val bottomMostY = maxOf(p1.y, p2.y)
-                start = IntPoint(p1.x, topMostY)
-                endInclusive = IntPoint(p1.x, bottomMostY)
+                start = MutableIntPoint(p1.x, topMostY)
+                endInclusive = MutableIntPoint(p1.x, bottomMostY)
             }
 
             p1.y == p2.y -> {
                 val leftMostX = minOf(p1.x, p2.x)
                 val rightMostX = maxOf(p1.x, p2.x)
-                start = IntPoint(leftMostX, p1.y)
-                endInclusive = IntPoint(rightMostX, p1.y)
+                start = MutableIntPoint(leftMostX, p1.y)
+                endInclusive = MutableIntPoint(rightMostX, p1.y)
             }
 
             else -> TODO()
@@ -28,7 +28,7 @@ class IntPointRange(p1: IntPoint, p2: IntPoint) : ClosedRange<IntPoint> {
     val yRange = start.y..endInclusive.y
     val xRange = start.x..endInclusive.x
 
-    override fun contains(value: IntPoint): Boolean {
+    override fun contains(value: MutableIntPoint): Boolean {
         when {
             isXAligned -> {
                 if (value.x != start.x) return false
@@ -49,7 +49,7 @@ class IntPointRange(p1: IntPoint, p2: IntPoint) : ClosedRange<IntPoint> {
 }
 
 sealed class DropSandResult {
-    data class StabalizedGrain(val grain: IntPoint) : DropSandResult()
+    data class StabalizedGrain(val grain: MutableIntPoint) : DropSandResult()
     object EndlessDrop : DropSandResult()
     object BlockedAtStart : DropSandResult()
 }
@@ -58,17 +58,17 @@ data class Simulator(
     val pointSequences: List<List<IntPointRange>>,
     val hasFloor: Boolean
 ) {
-    val grains: MutableSet<IntPoint> = mutableSetOf()
+    val grains: MutableSet<MutableIntPoint> = mutableSetOf()
 
-    private fun pointIsBlocked(p: IntPoint): Boolean {
+    private fun pointIsBlocked(p: MutableIntPoint): Boolean {
         return pointIsBlockedByGrains(p) || pointIsBlockedByWalls(p) || pointIsBlockedByFloor(p)
     }
 
-    private fun pointIsBlockedByGrains(p: IntPoint): Boolean {
+    private fun pointIsBlockedByGrains(p: MutableIntPoint): Boolean {
         return grains.contains(p)
     }
 
-    private fun pointIsBlockedByWalls(p: IntPoint): Boolean {
+    private fun pointIsBlockedByWalls(p: MutableIntPoint): Boolean {
         return pointSequences.any { ranges ->
             ranges.any {
                 p in it
@@ -76,14 +76,14 @@ data class Simulator(
         }
     }
 
-    fun pointIsBlockedByFloor(p: IntPoint): Boolean {
+    fun pointIsBlockedByFloor(p: MutableIntPoint): Boolean {
         if (hasFloor) {
             return p.y >= bottomMostYWithFloor
         }
         return false
     }
 
-    private fun nextState(currPoint: IntPoint): IntPoint? {
+    private fun nextState(currPoint: MutableIntPoint): MutableIntPoint? {
         val copy = currPoint.copy()
         copy.y++
         if (!pointIsBlocked(copy)) {
@@ -105,7 +105,7 @@ data class Simulator(
     }
 
     fun dropSand(): DropSandResult {
-        var sand = IntPoint(500, 0)
+        var sand = MutableIntPoint(500, 0)
         if (pointIsBlocked(sand)) {
             return DropSandResult.BlockedAtStart
         }
@@ -166,7 +166,7 @@ fun main() {
                 it.split(",").run {
                     val currY = get(1).toInt()
                     lowestY = maxOf(lowestY, currY)
-                    IntPoint(get(0).toInt() to currY)
+                    MutableIntPoint(get(0).toInt() to currY)
                 }
             }.windowed(2).map {
                 it[0] iR it[1]
@@ -231,7 +231,7 @@ fun main() {
                 it.split(",").run {
                     val currY = get(1).toInt()
                     lowestY = maxOf(lowestY, currY)
-                    IntPoint(get(0).toInt() to currY)
+                    MutableIntPoint(get(0).toInt() to currY)
                 }
             }.windowed(2).map {
                 it[0] iR it[1]
@@ -280,5 +280,5 @@ fun main() {
         part2(input)
 }
 
-private infix fun IntPoint.iR(intPoint: IntPoint) = IntPointRange(this, intPoint)
+private infix fun MutableIntPoint.iR(mutableIntPoint: MutableIntPoint) = IntPointRange(this, mutableIntPoint)
 
