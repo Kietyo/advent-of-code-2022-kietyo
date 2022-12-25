@@ -1,3 +1,5 @@
+import kotlin.system.exitProcess
+
 enum class BlockTypeEnum(
     val blockingOffsets: List<MutableIntPoint>,
     val lowestYOffset: Int
@@ -144,6 +146,18 @@ enum class Jet {
 const val CHAMBER_WIDTH = 7
 
 fun main() {
+    data class SimulatorState(
+        val blockTypeIdx: Int,
+        val jetPosition: Int
+    )
+
+    data class SimulatorResult(
+        val numBlocksDropped: Int,
+        val heightAdded: Int,
+        val nextBlockTypeIdx: Int,
+        val nextJetPosition: Int
+    )
+
     data class Simulator(
         val jetPattern: String,
         val droppedBlocks: MutableList<BlockType> = mutableListOf()
@@ -164,7 +178,7 @@ fun main() {
 
         fun isYCompletelyFilled(y: Int): Boolean {
             if (y < 0) return false
-            return (0 until CHAMBER_WIDTH).all {x ->
+            return (0 until CHAMBER_WIDTH).all { x ->
                 droppedBlocks.any {
                     it.collidesWithUnitBlock(x, y)
                 }
@@ -233,16 +247,17 @@ fun main() {
         }
     }
 
+    val blockTypeOrder = listOf(
+        BlockTypeEnum.HORIZONTAL_LINE,
+        BlockTypeEnum.PLUS,
+        BlockTypeEnum.REVERSE_L,
+        BlockTypeEnum.VERTICAL_LINE,
+        BlockTypeEnum.SQUARE
+    )
+
     fun part1(input: List<String>): Unit {
         println(input)
         val simulator = Simulator(input.first())
-        val blockTypeOrder = listOf(
-            BlockTypeEnum.HORIZONTAL_LINE,
-            BlockTypeEnum.PLUS,
-            BlockTypeEnum.REVERSE_L,
-            BlockTypeEnum.VERTICAL_LINE,
-            BlockTypeEnum.SQUARE
-        )
         var idx = 0
 
         repeat(2022) { simRunNum ->
@@ -264,7 +279,133 @@ fun main() {
         println(simulator.highestY)
     }
 
+    fun calculateSimulatorStates(jetPattern: String): MutableList<Pair<SimulatorState, SimulatorResult>> {
+        val simulator = Simulator(jetPattern)
+
+
+        val savedStates = mutableListOf<Pair<SimulatorState, SimulatorResult>>()
+
+        var blockTypeIndex = 0
+
+        var currentState = SimulatorState(blockTypeIndex, simulator.currJetPosition)
+        var numBlocksDropped = 0
+
+        var prevHighestY = 0
+
+        repeat(20220000) { simRunNum ->
+            numBlocksDropped++
+            println(simRunNum)
+            val currBlock = blockTypeOrder[blockTypeIndex].getBlockType()
+            simulator.dropBlock(currBlock)
+            blockTypeIndex = (blockTypeIndex + 1) % 5
+
+            val highestY = simulator.highestY - 1
+            if (simRunNum > 0) {
+                if (simulator.isYCompletelyFilled(highestY)) {
+                    println("completely filled at: ${highestY}")
+                    val simulatorResult = SimulatorResult(
+                        numBlocksDropped,
+                        highestY - prevHighestY,
+                        blockTypeIndex, simulator.currJetPosition
+                    )
+                    savedStates.add(currentState to simulatorResult)
+
+                    // Reset
+                    prevHighestY = highestY
+                    currentState = SimulatorState(blockTypeIndex, simulator.currJetPosition)
+                    numBlocksDropped = 0
+
+                    val seenStateBefore = savedStates.any {
+                        it.first.blockTypeIdx == blockTypeIndex && it.first.jetPosition == simulator.currJetPosition
+                    }
+                    if (seenStateBefore) {
+                        return savedStates
+                    }
+                }
+            }
+        }
+
+        TODO()
+    }
+
+    fun calculateHeightUsingStates(
+        numBlocksToDrop: Long,
+        jetPattern: String,
+        states: Map<SimulatorState, SimulatorResult>) {
+
+        val simulator = Simulator(jetPattern)
+
+        var blockTypeIdx = 0
+
+        var numBlocksDropped = 0
+
+        var currHeight = 0L
+
+        while (true) {
+            println("blockTypeIdx: $blockTypeIdx, simulator.currJetPosition: ${simulator.currJetPosition}")
+            val result = states[SimulatorState(blockTypeIdx, simulator.currJetPosition)]!!
+            if (numBlocksDropped + result.numBlocksDropped > numBlocksToDrop) {
+                while (numBlocksDropped < numBlocksToDrop) {
+                    val currBlock = blockTypeOrder[blockTypeIdx].getBlockType()
+                    simulator.dropBlock(currBlock)
+                    blockTypeIdx = (blockTypeIdx + 1) % 5
+
+                    numBlocksDropped++
+                }
+
+
+
+                println("""
+                    currHeight: $currHeight,
+                    simulator.highestY: ${simulator.highestY}
+                """.trimIndent())
+                break
+            } else {
+                currHeight += result.heightAdded
+                numBlocksDropped += result.numBlocksDropped
+                blockTypeIdx = result.nextBlockTypeIdx
+                simulator.currJetPosition = result.nextJetPosition
+            }
+        }
+    }
+
     fun part2(input: List<String>): Unit {
+        println(input)
+
+        val jetPattern = input.first()
+
+//        val simulatorStates = calculateSimulatorStates(jetPattern)
+        val simulatorStates = mapOf(
+            SimulatorState(0, 0) to SimulatorResult(numBlocksDropped=926, heightAdded=1491, nextBlockTypeIdx=1, nextJetPosition=5307),
+            SimulatorState(1, 5307) to SimulatorResult(numBlocksDropped=1695, heightAdded=2671, nextBlockTypeIdx=1, nextJetPosition=5307),
+        )
+
+        println((1000000000000L - 926))
+        println((1000000000000L - 926) / 1695)
+
+        val numRepeated = (1000000000000L - 926) / 1695
+        val heightToAdd = numRepeated * 2671
+        val remainingBlocksToAdd = 1000000000000L - 926 - numRepeated * 1695
+
+        println(remainingBlocksToAdd)
+
+        val simulator = Simulator(jetPattern)
+        simulator.currJetPosition = 5307
+        var blockTypeIdx = 1
+
+        repeat(remainingBlocksToAdd.toInt()) {
+            val currBlock = blockTypeOrder[blockTypeIdx].getBlockType()
+            simulator.dropBlock(currBlock)
+            blockTypeIdx = (blockTypeIdx + 1) % 5
+
+        }
+
+        println(simulator.highestY.toLong() + 1491 + heightToAdd)
+
+
+//        calculateHeightUsingStates(1000000000000, jetPattern, simulatorStates)
+
+//        println(simulatorStates)
 
     }
 
@@ -273,11 +414,11 @@ fun main() {
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("${dayString}_test")
     //    part1(testInput)
-    //    part2(testInput)
+//        part2(testInput)
 
     val input = readInput("${dayString}_input")
-    part1(input)
-    //        part2(input)
+    //    part1(input)
+    part2(input)
 }
 
 
