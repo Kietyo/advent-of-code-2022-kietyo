@@ -282,7 +282,6 @@ fun main() {
     fun calculateSimulatorStates(jetPattern: String): MutableList<Pair<SimulatorState, SimulatorResult>> {
         val simulator = Simulator(jetPattern)
 
-
         val savedStates = mutableListOf<Pair<SimulatorState, SimulatorResult>>()
 
         var blockTypeIndex = 0
