@@ -61,15 +61,8 @@ fun main() {
     fun String.toBlueprint(): Blueprint {
         val split1 = this.split(": ")
         val split2 = split1[1].dropLast(1).split(". ")
-
         val blueprintId = split1.first().split(" ").last().toInt()
-
-        println(split1)
-
         val robotDescription = split2.map { it.robotDescriptionToRobot() }
-
-        println(blueprintId)
-        println(robotDescription)
         return Blueprint(blueprintId, robotDescription)
     }
 
@@ -78,6 +71,8 @@ fun main() {
         val currMaterials: IntArray,
         val minsLeft: Int
     ) {
+        fun createCopy() = GeoState(currRobots.clone(), currMaterials.clone(), minsLeft
+        )
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
@@ -150,7 +145,7 @@ fun main() {
             val currMaterials = geostate.currMaterials
             val minsLeft = geostate.minsLeft
 
-            if (numStatesExplored % 100000 == 0) {
+            if (numStatesExplored % 1000000 == 0) {
                 println("numStatesExplored: $numStatesExplored, numStatesPruned: $numStatesPruned, cacheSize: $cacheSize, cacheHits: $cacheHits, bestGeoCount: $bestGeoCount")
             }
 
@@ -170,29 +165,39 @@ fun main() {
 
             val nextStates = getNextStates(currMaterials)
 
+            for (i in currMaterials.indices) {
+                currMaterials[i] += geostate.currRobots[i]
+            }
+
             val maxGeos = nextStates.maxOf {
                 when (it) {
                     is GeoNextState.BuildRobot -> {
-                        val materialsAfterBuildingRobot = IntArray(4) { idx ->
-                            val newMaterialCount = currMaterials[idx] - it.robotSpec.materialCosts[idx] + geostate.currRobots[idx]
-                            require(newMaterialCount >= 0)
-                            newMaterialCount
+                        for (i in currMaterials.indices) {
+                            currMaterials[i] -= it.robotSpec.materialCosts[i]
                         }
-                        val newRobotMap = currRobots.copyOf()
-                        newRobotMap[it.robotSpec.robotTypeIdx]++
-                        simulate(GeoState(newRobotMap, materialsAfterBuildingRobot, minsLeft - 1))
+
+                        currRobots[it.robotSpec.robotTypeIdx]++
+                        val g = simulate(GeoState(currRobots, currMaterials, minsLeft - 1))
+                        currRobots[it.robotSpec.robotTypeIdx]--
+
+                        for (i in currMaterials.indices) {
+                            currMaterials[i] += it.robotSpec.materialCosts[i]
+                        }
+
+                        g
                     }
 
                     GeoNextState.Continue -> {
-                        val newMaterials = IntArray(4) { idx ->
-                            currMaterials[idx] + geostate.currRobots[idx]
-                        }
-                        simulate(GeoState(currRobots, newMaterials, minsLeft - 1))
+                        simulate(GeoState(currRobots, currMaterials, minsLeft - 1))
                     }
                 }
             }
 
-            cache[geostate] = maxGeos
+            for (i in currMaterials.indices) {
+                currMaterials[i] -= geostate.currRobots[i]
+            }
+
+            cache[geostate.createCopy()] = maxGeos
 
             return maxGeos
         }
