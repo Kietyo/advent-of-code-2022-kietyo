@@ -1,0 +1,10 @@
+cache size: 30200000, cacheHits: 80468803, currBestMax: 2372, numStatesPruned: 13832562, prunedStateBcOfElephant: 371529, prunedStateBcOfMe: 877408
+cache size: 30200000, cacheHits: 80468804, currBestMax: 2372, numStatesPruned: 13832562, prunedStateBcOfElephant: 371529, prunedStateBcOfMe: 877408
+cache size: 30200000, cacheHits: 80468805, currBestMax: 2372, numStatesPruned: 13832562, prunedStateBcOfElephant: 371529, prunedStateBcOfMe: 877408
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at java.base/java.util.LinkedHashMap.newNode(LinkedHashMap.java:257)
+	at java.base/java.util.HashMap.putVal(HashMap.java:642)
+	at java.base/java.util.HashMap.put(HashMap.java:612)
+	at java.base/java.util.HashSet.add(HashSet.java:221)
+	at kotlin.collections.SetsKt___SetsKt.minus(_Sets.kt:142)
+	at Day16Kt$main$OptimizationContext.optimizeMyTurn(Day16.kt:71)
