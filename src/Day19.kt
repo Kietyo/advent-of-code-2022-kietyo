@@ -37,7 +37,7 @@ fun main() {
         fun getAllSpecsAvailable(currMaterials: IntArray): List<RobotSpec> {
             return robotSpecs.filter {
                 it.canBuyWithCurrentMaterials(currMaterials)
-            }
+            }.asReversed()
         }
     }
 
@@ -111,16 +111,12 @@ fun main() {
         var numStatesPruned = 0
 
         fun getNextStates(
-            currMaterials: IntArray
+            currMaterials: IntArray,
+            minsLeft: Int
         ): List<GeoNextState> {
             val nextStates = mutableListOf<GeoNextState>()
             blueprint.getAllSpecsAvailable(currMaterials).forEach {
                 nextStates.add(GeoNextState.BuildRobot(it))
-//                if (currMaterials[it.robotTypeIdx] <= maxMaterialsNeeded[it.robotTypeIdx] * 2) {
-//                    nextStates.add(GeoNextState.BuildRobot(it))
-//                } else {
-//                    numStatesPruned++
-//                }
             }
 
             if (nextStates.size != blueprint.robotSpecs.size) {
@@ -151,11 +147,27 @@ fun main() {
 
             if (minsLeft == 0) {
                 val currGeos = currMaterials[GEODE_IDX]
-                if (currGeos == 30) {
-                    println("wtf")
-                }
                 bestGeoCount = maxOf(bestGeoCount, currGeos)
                 return currGeos
+            }
+
+            if (minsLeft > 0) {
+                val currGeos = currMaterials[GEODE_IDX]
+                val numGeoRobots = currRobots[GEODE_IDX]
+                val maxGeosRemaining = numGeoRobots * minsLeft + ((minsLeft * (minsLeft - 1)) / 2)
+                if (currGeos + maxGeosRemaining <= bestGeoCount) {
+                    numStatesPruned++
+                    return bestGeoCount
+                }
+            }
+
+            if (minsLeft == 2) {
+                val currGeos = currMaterials[GEODE_IDX]
+                val numGeoRobots = currRobots[GEODE_IDX]
+                if (currGeos + numGeoRobots + (numGeoRobots + 1) + 1 <= bestGeoCount) {
+                    numStatesPruned++
+                    return bestGeoCount
+                }
             }
 
             if (geostate in cache) {
@@ -163,7 +175,7 @@ fun main() {
                 return cache[geostate]!!
             }
 
-            val nextStates = getNextStates(currMaterials)
+            val nextStates = getNextStates(currMaterials, minsLeft)
 
             for (i in currMaterials.indices) {
                 currMaterials[i] += geostate.currRobots[i]
@@ -210,35 +222,70 @@ fun main() {
 
         println(blueprints.joinToString("\n"))
 
-        val simulator = GeoSimulator(blueprints.first())
-        val bestGeos = simulator.simulate(GeoState(
-            IntArray(materialToIndex.size) { 0 }.also {
-                it[ORE_IDX] = 1
-            },
-            IntArray(NUM_MATERIALS) { 0 },
-            24
-        )
-        )
+        val blueprintToBestGeos = blueprints.map {
+            val simulator = GeoSimulator(it)
+            val bestGeos = simulator.simulate(GeoState(
+                IntArray(materialToIndex.size) { 0 }.also {
+                    it[ORE_IDX] = 1
+                },
+                IntArray(NUM_MATERIALS) { 0 },
+                24)
+            )
+            it to bestGeos
+        }
+
+        val sumQualityScores = blueprintToBestGeos.sumOf {
+            it.first.id * it.second
+        }
 
         val endTime = System.currentTimeMillis()
-                println("bestGeos: $bestGeos")
+                println("sumQualityScores: $sumQualityScores")
         println((endTime - startTime).milliseconds)
     }
 
     fun part2(input: List<String>): Unit {
+        val startTime = System.currentTimeMillis()
+        println("startTime: $startTime")
+        val blueprints = input.map { it.toBlueprint() }
 
+        println(blueprints.joinToString("\n"))
+
+//        val simulator = GeoSimulator(blueprints[1])
+//        val bestGeos = simulator.simulate(GeoState(
+//            IntArray(materialToIndex.size) { 0 }.also {
+//                it[ORE_IDX] = 1
+//            },
+//            IntArray(NUM_MATERIALS) { 0 },
+//            32)
+//        )
+
+        val product = blueprints.take(3).map {
+            val simulator = GeoSimulator(it)
+            val bestGeos = simulator.simulate(GeoState(
+                IntArray(materialToIndex.size) { 0 }.also {
+                    it[ORE_IDX] = 1
+                },
+                IntArray(NUM_MATERIALS) { 0 },
+                32)
+            )
+            bestGeos
+        }.fold(1) { acc, i ->
+            acc * i
+        }
+
+        println("product: $product")
     }
 
     val dayString = "day19"
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("${dayString}_test")
-    part1(testInput)
-    //    part2(testInput)
+//    part1(testInput)
+//        part2(testInput)
 
     val input = readInput("${dayString}_input")
-    //        part1(input)
-    //        part2(input)
+//            part1(input)
+            part2(input)
 }
 
 
