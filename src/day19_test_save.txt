@@ -3,3 +3,89 @@ product: 3472
 
 product: 3472
 21.734s
+
+
+"C:\Program Files\Eclipse Foundation\jdk-16.0.2.7-hotspot\bin\java.exe" -Dvisualvm.id=927563782758700 -javaagent:C:\Users\kietm\AppData\Local\JetBrains\Toolbox\apps\IDEA-U\ch-0\223.7571.182\lib\idea_rt.jar=51491:C:\Users\kietm\AppData\Local\JetBrains\Toolbox\apps\IDEA-U\ch-0\223.7571.182\bin -Dfile.encoding=UTF-8 -classpath C:\Users\kietm\GitHub\advent-of-code-2022-kietyo\build\classes\kotlin\main;C:\Users\kietm\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-jdk8\1.8.0-Beta\930004708b62fb9501e327cd0a7543b0e563a967\kotlin-stdlib-jdk8-1.8.0-Beta.jar;C:\Users\kietm\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-jdk7\1.8.0-Beta\daab9ccba6e88ddfdfd51f0647755361a45eb60f\kotlin-stdlib-jdk7-1.8.0-Beta.jar;C:\Users\kietm\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib\1.8.0-Beta\65878ee92a80c93cd0e5f4079569244d50027b9b\kotlin-stdlib-1.8.0-Beta.jar;C:\Users\kietm\.gradle\caches\modules-2\files-2.1\org.jetbrains.kotlin\kotlin-stdlib-common\1.8.0-Beta\82c0115811fac2a9a4b7bd047f7ae08c53822388\kotlin-stdlib-common-1.8.0-Beta.jar;C:\Users\kietm\.gradle\caches\modules-2\files-2.1\org.jetbrains\annotations\13.0\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\annotations-13.0.jar Day19Kt
+startTime: 1672188020846
+Blueprint(id=1, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=15, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=9)])
+Blueprint(id=2, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=5, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=7)])
+Blueprint(id=3, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=11, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=7)])
+Blueprint(id=4, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=14, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=16)])
+Blueprint(id=5, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=8, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=18)])
+Blueprint(id=6, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=14, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=4, clayCost=0, obsidianCost=19)])
+Blueprint(id=7, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=2, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=20, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=16)])
+Blueprint(id=8, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=10, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=14)])
+Blueprint(id=9, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=7, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=20)])
+Blueprint(id=10, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=14, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=4, clayCost=0, obsidianCost=17)])
+Blueprint(id=11, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=5, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=4, clayCost=0, obsidianCost=11)])
+Blueprint(id=12, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=2, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=13, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=15)])
+Blueprint(id=13, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=6, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=4, clayCost=0, obsidianCost=11)])
+Blueprint(id=14, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=18, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=4, clayCost=0, obsidianCost=16)])
+Blueprint(id=15, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=19, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=8)])
+Blueprint(id=16, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=20, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=14)])
+Blueprint(id=17, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=19, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=20)])
+Blueprint(id=18, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=20, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=20)])
+Blueprint(id=19, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=5, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=4, clayCost=0, obsidianCost=8)])
+Blueprint(id=20, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=9, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=20)])
+Blueprint(id=21, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=2, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=11, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=16)])
+Blueprint(id=22, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=2, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=16, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=11)])
+Blueprint(id=23, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=12, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=8)])
+Blueprint(id=24, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=7, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=10)])
+Blueprint(id=25, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=2, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=2, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=10, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=11)])
+Blueprint(id=26, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=7, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=9)])
+Blueprint(id=27, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=3, clayCost=7, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=4, clayCost=0, obsidianCost=11)])
+Blueprint(id=28, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=2, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=11, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=8)])
+Blueprint(id=29, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=17, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=13)])
+Blueprint(id=30, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=6, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=20)])
+Blueprint(id=1, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=3, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=15, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=9)])
+numStatesExplored: 1000000, numStatesPruned: 874794, cacheSize: 258435, cacheHits: 55189, bestGeoCount: 24
+numStatesExplored: 2000000, numStatesPruned: 1754804, cacheSize: 515547, cacheHits: 127057, bestGeoCount: 24
+numStatesExplored: 3000000, numStatesPruned: 2581757, cacheSize: 774514, cacheHits: 256136, bestGeoCount: 26
+numStatesExplored: 4000000, numStatesPruned: 3442357, cacheSize: 1028829, cacheHits: 325684, bestGeoCount: 26
+numStatesExplored: 5000000, numStatesPruned: 4266927, cacheSize: 1281960, cacheHits: 464692, bestGeoCount: 26
+numStatesExplored: 6000000, numStatesPruned: 5082474, cacheSize: 1540085, cacheHits: 617751, bestGeoCount: 26
+numStatesExplored: 7000000, numStatesPruned: 5882588, cacheSize: 1801875, cacheHits: 800757, bestGeoCount: 26
+numStatesExplored: 8000000, numStatesPruned: 6637892, cacheSize: 2062583, cacheHits: 1016618, bestGeoCount: 26
+numStatesExplored: 9000000, numStatesPruned: 7410317, cacheSize: 2325289, cacheHits: 1210678, bestGeoCount: 26
+numStatesExplored: 10000000, numStatesPruned: 8200692, cacheSize: 2589691, cacheHits: 1389071, bestGeoCount: 29
+numStatesExplored: 11000000, numStatesPruned: 9036339, cacheSize: 2841487, cacheHits: 1472258, bestGeoCount: 29
+numStatesExplored: 12000000, numStatesPruned: 9847735, cacheSize: 3093962, cacheHits: 1616441, bestGeoCount: 29
+numStatesExplored: 13000000, numStatesPruned: 10639741, cacheSize: 3350753, cacheHits: 1784461, bestGeoCount: 29
+numStatesExplored: 14000000, numStatesPruned: 11462770, cacheSize: 3603369, cacheHits: 1905168, bestGeoCount: 29
+numStatesExplored: 15000000, numStatesPruned: 12265632, cacheSize: 3859609, cacheHits: 2071758, bestGeoCount: 29
+numStatesExplored: 16000000, numStatesPruned: 13028090, cacheSize: 4125546, cacheHits: 2299300, bestGeoCount: 29
+numStatesExplored: 17000000, numStatesPruned: 13802445, cacheSize: 4399045, cacheHits: 2514804, bestGeoCount: 29
+numStatesExplored: 18000000, numStatesPruned: 14545745, cacheSize: 4667378, cacheHits: 2747595, bestGeoCount: 29
+numStatesExplored: 19000000, numStatesPruned: 15288506, cacheSize: 4935922, cacheHits: 2985246, bestGeoCount: 29
+numStatesExplored: 20000000, numStatesPruned: 16116400, cacheSize: 5198398, cacheHits: 3095799, bestGeoCount: 35
+numStatesExplored: 21000000, numStatesPruned: 16946072, cacheSize: 5449420, cacheHits: 3205475, bestGeoCount: 35
+numStatesExplored: 22000000, numStatesPruned: 17748092, cacheSize: 5701903, cacheHits: 3348765, bestGeoCount: 35
+numStatesExplored: 23000000, numStatesPruned: 18517641, cacheSize: 5955231, cacheHits: 3516913, bestGeoCount: 35
+numStatesExplored: 24000000, numStatesPruned: 19363445, cacheSize: 6205618, cacheHits: 3585379, bestGeoCount: 35
+numStatesExplored: 25000000, numStatesPruned: 20170775, cacheSize: 6457424, cacheHits: 3730474, bestGeoCount: 35
+numStatesExplored: 26000000, numStatesPruned: 20968049, cacheSize: 6713378, cacheHits: 3899133, bestGeoCount: 35
+numStatesExplored: 27000000, numStatesPruned: 21692545, cacheSize: 6970695, cacheHits: 4126390, bestGeoCount: 35
+numStatesExplored: 28000000, numStatesPruned: 22458875, cacheSize: 7230288, cacheHits: 4339380, bestGeoCount: 35
+numStatesExplored: 29000000, numStatesPruned: 23197727, cacheSize: 7488259, cacheHits: 4552854, bestGeoCount: 35
+numStatesExplored: 30000000, numStatesPruned: 24016331, cacheSize: 7741416, cacheHits: 4684346, bestGeoCount: 40
+numStatesExplored: 31000000, numStatesPruned: 24807659, cacheSize: 7995445, cacheHits: 4860811, bestGeoCount: 40
+numStatesExplored: 32000000, numStatesPruned: 25573776, cacheSize: 8260569, cacheHits: 5085375, bestGeoCount: 40
+numStatesExplored: 33000000, numStatesPruned: 26316109, cacheSize: 8533047, cacheHits: 5331580, bestGeoCount: 40
+numStatesExplored: 34000000, numStatesPruned: 27045153, cacheSize: 8810380, cacheHits: 5585262, bestGeoCount: 40
+numStatesExplored: 35000000, numStatesPruned: 27769723, cacheSize: 9083742, cacheHits: 5848151, bestGeoCount: 40
+
+Blueprint(id=2, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=4, clayCost=5, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=3, clayCost=0, obsidianCost=7)])
+numStatesExplored: 1000000, numStatesPruned: 879533, cacheSize: 261444, cacheHits: 57230, bestGeoCount: 48
+numStatesExplored: 2000000, numStatesPruned: 1746468, cacheSize: 529555, cacheHits: 140805, bestGeoCount: 58
+
+Blueprint(id=3, robotSpecs=[RobotSpec(robotTypeIdx=0, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=1, oreCost=4, clayCost=0, obsidianCost=0), RobotSpec(robotTypeIdx=2, oreCost=2, clayCost=11, obsidianCost=0), RobotSpec(robotTypeIdx=3, oreCost=2, clayCost=0, obsidianCost=7)])
+numStatesExplored: 1000000, numStatesPruned: 893471, cacheSize: 263264, cacheHits: 53479, bestGeoCount: 29
+numStatesExplored: 2000000, numStatesPruned: 1733294, cacheSize: 527741, cacheHits: 192802, bestGeoCount: 29
+numStatesExplored: 3000000, numStatesPruned: 2577745, cacheSize: 795245, cacheHits: 315626, bestGeoCount: 37
+numStatesExplored: 4000000, numStatesPruned: 3396505, cacheSize: 1057882, cacheHits: 474860, bestGeoCount: 38
+numStatesExplored: 5000000, numStatesPruned: 4190355, cacheSize: 1332618, cacheHits: 669981, bestGeoCount: 38
+
+product: 88160
+9.149s
+
+Process finished with exit code 0

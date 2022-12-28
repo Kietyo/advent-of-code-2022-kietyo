@@ -2,14 +2,19 @@ import kotlin.time.Duration.Companion.milliseconds
 
 data class RobotSpec(
     val robotTypeIdx: Int,
-    val materialCosts: IntArray
+    val oreCost: Short,
+    val clayCost: Short,
+    val obsidianCost: Short,
 ) {
-    fun canBuyWithCurrentMaterials(currMaterials: IntArray): Boolean {
-        require(materialCosts.size == currMaterials.size)
-        for (i in currMaterials.indices) {
-            if (currMaterials[i] < materialCosts[i]) return false
-        }
-        return true
+    fun canBuyWithCurrentMaterials(
+        ore: Short,
+        clay: Short,
+        obsidian: Short,
+        geode: Short
+    ): Boolean {
+        return !(ore < oreCost ||
+                clay < clayCost ||
+                obsidian < obsidianCost)
     }
 }
 
@@ -37,9 +42,14 @@ fun main() {
         val id: Int,
         val robotSpecs: List<RobotSpec>
     ) {
-        fun getAllSpecsAvailable(currMaterials: IntArray): List<RobotSpec> {
+        fun getAllSpecsAvailable(
+            ore: Short,
+            clay: Short,
+            obsidian: Short,
+            geode: Short,
+        ): List<RobotSpec> {
             return robotSpecs.filter {
-                it.canBuyWithCurrentMaterials(currMaterials)
+                it.canBuyWithCurrentMaterials(ore, clay, obsidian, geode)
             }.asReversed()
         }
     }
@@ -58,7 +68,12 @@ fun main() {
         val robotTypeIdx = materialToIndex.indexOf(robotType)
         require(robotTypeIdx >= 0)
 
-        return RobotSpec(robotTypeIdx, materialsCostArray)
+        return RobotSpec(
+            robotTypeIdx,
+            materialsCostArray[ORE_IDX].toShort(),
+            materialsCostArray[CLAY_IDX].toShort(),
+            materialsCostArray[OBSIDIAN_IDX].toShort(),
+        )
     }
 
     fun String.toBlueprint(): Blueprint {
@@ -74,60 +89,43 @@ fun main() {
         val clayRobots: Short,
         val obsidianRobots: Short,
         val geodeRobots: Short,
-        val currMaterials: IntArray,
+        val ore: Short,
+        val clay: Short,
+        val obsidian: Short,
+        val geode: Short,
         val minsLeft: Int
-    ) {
-        fun createCopy() = this.copy(currMaterials = currMaterials.clone())
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as GeoState
-
-            if (oreRobots != other.oreRobots) return false
-            if (clayRobots != other.clayRobots) return false
-            if (obsidianRobots != other.obsidianRobots) return false
-            if (geodeRobots != other.geodeRobots) return false
-            if (!currMaterials.contentEquals(other.currMaterials)) return false
-            if (minsLeft != other.minsLeft) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = oreRobots.toInt()
-            result = 31 * result + clayRobots
-            result = 31 * result + obsidianRobots
-            result = 31 * result + geodeRobots
-            result = 31 * result + currMaterials.contentHashCode()
-            result = 31 * result + minsLeft
-            return result
-        }
-    }
+    )
 
     class GeoSimulator(val blueprint: Blueprint) {
 
-        val maxMaterialsNeeded = IntArray(NUM_MATERIALS).also { arr ->
-            blueprint.robotSpecs.forEach {
-                it.materialCosts.forEachIndexed { index, i ->
-                    arr[index] = maxOf(arr[index], i)
-                }
-            }
-        }
-
-        init {
-            println("maxMaterialsNeeded: ${maxMaterialsNeeded.toList()}")
-        }
+        val maxOreNeeded = blueprint.robotSpecs.maxOf { it.oreCost }
+        val maxClayNeeded = blueprint.robotSpecs.maxOf { it.clayCost }
+        val maxObsidianNeeded = blueprint.robotSpecs.maxOf { it.obsidianCost }
 
         var numStatesPruned = 0
 
         fun getNextStates(
-            currMaterials: IntArray,
-            minsLeft: Int
+            currentState: GeoState
         ): List<GeoNextState> {
             val nextStates = mutableListOf<GeoNextState>()
-            blueprint.getAllSpecsAvailable(currMaterials).forEach {
-                nextStates.add(GeoNextState.BuildRobot(it))
+            blueprint.getAllSpecsAvailable(
+                currentState.ore,
+                currentState.clay,
+                currentState.obsidian,
+                currentState.geode
+            ).forEach {
+                if (it.robotTypeIdx == ORE_IDX && currentState.oreRobots < maxOreNeeded) {
+                    nextStates.add(GeoNextState.BuildRobot(it))
+                }
+                if (it.robotTypeIdx == CLAY_IDX && currentState.clayRobots < maxClayNeeded) {
+                    nextStates.add(GeoNextState.BuildRobot(it))
+                }
+                if (it.robotTypeIdx == OBSIDIAN_IDX && currentState.obsidianRobots < maxObsidianNeeded) {
+                    nextStates.add(GeoNextState.BuildRobot(it))
+                }
+                if (it.robotTypeIdx == GEODE_IDX) {
+                    nextStates.add(GeoNextState.BuildRobot(it))
+                }
             }
 
             if (nextStates.size != blueprint.robotSpecs.size) {
@@ -138,17 +136,16 @@ fun main() {
             return nextStates
         }
 
-        val cache = mutableMapOf<GeoState, Int>()
+        val cache = mutableMapOf<GeoState, Short>()
         val cacheSize get() = cache.size
         var cacheHits = 0
         var numStatesExplored = 0
-        var bestGeoCount = 0
+        var bestGeoCount: Short = 0
 
         fun simulate(
             geostate: GeoState
-        ): Int {
+        ): Short {
             numStatesExplored++
-            val currMaterials = geostate.currMaterials
             val minsLeft = geostate.minsLeft
 
             if (numStatesExplored % 1000000 == 0) {
@@ -156,16 +153,14 @@ fun main() {
             }
 
             if (minsLeft == 0) {
-                val currGeos = currMaterials[GEODE_IDX]
-                bestGeoCount = maxOf(bestGeoCount, currGeos)
-                return currGeos
+                bestGeoCount = maxOf(bestGeoCount, geostate.geode)
+                return geostate.geode
             }
 
             if (minsLeft > 0) {
-                val currGeos = currMaterials[GEODE_IDX]
                 val numGeoRobots = geostate.geodeRobots
                 val maxGeosRemaining = numGeoRobots * minsLeft + ((minsLeft * (minsLeft - 1)) / 2)
-                if (currGeos + maxGeosRemaining <= bestGeoCount) {
+                if (geostate.geode + maxGeosRemaining <= bestGeoCount) {
                     numStatesPruned++
                     return bestGeoCount
                 }
@@ -176,52 +171,52 @@ fun main() {
                 return cache[geostate]!!
             }
 
-            val nextStates = getNextStates(currMaterials, minsLeft)
+            val nextStates = getNextStates(
+                geostate
+            )
 
-            currMaterials[ORE_IDX] += geostate.oreRobots.toInt()
-            currMaterials[CLAY_IDX] += geostate.clayRobots.toInt()
-            currMaterials[OBSIDIAN_IDX] += geostate.obsidianRobots.toInt()
-            currMaterials[GEODE_IDX] += geostate.geodeRobots.toInt()
+            val newOre = (geostate.ore + geostate.oreRobots).toShort()
+            val newClay = (geostate.clay + geostate.clayRobots).toShort()
+            val newObsidian = (geostate.obsidian + geostate.obsidianRobots).toShort()
+            val newGeode = (geostate.geode + geostate.geodeRobots).toShort()
 
             val maxGeos = nextStates.maxOf {
                 when (it) {
                     is GeoNextState.BuildRobot -> {
-                        for (i in currMaterials.indices) {
-                            currMaterials[i] -= it.robotSpec.materialCosts[i]
-                        }
-
-
-                        val g = simulate(GeoState(
-                             if (it.robotSpec.robotTypeIdx == ORE_IDX) geostate.oreRobots.inc() else geostate.oreRobots,
-                            if (it.robotSpec.robotTypeIdx == CLAY_IDX) geostate.clayRobots.inc() else geostate.clayRobots,
-                            if (it.robotSpec.robotTypeIdx == OBSIDIAN_IDX) geostate.obsidianRobots.inc() else geostate.obsidianRobots,
-                            if (it.robotSpec.robotTypeIdx == GEODE_IDX) geostate.geodeRobots.inc() else geostate.geodeRobots,
-                            currMaterials, minsLeft - 1))
-
-                        for (i in currMaterials.indices) {
-                            currMaterials[i] += it.robotSpec.materialCosts[i]
-                        }
-
+                        val g = simulate(
+                            GeoState(
+                                if (it.robotSpec.robotTypeIdx == ORE_IDX) geostate.oreRobots.inc() else geostate.oreRobots,
+                                if (it.robotSpec.robotTypeIdx == CLAY_IDX) geostate.clayRobots.inc() else geostate.clayRobots,
+                                if (it.robotSpec.robotTypeIdx == OBSIDIAN_IDX) geostate.obsidianRobots.inc() else geostate.obsidianRobots,
+                                if (it.robotSpec.robotTypeIdx == GEODE_IDX) geostate.geodeRobots.inc() else geostate.geodeRobots,
+                                (newOre - it.robotSpec.oreCost).toShort(),
+                                (newClay - it.robotSpec.clayCost).toShort(),
+                                (newObsidian - it.robotSpec.obsidianCost).toShort(),
+                                newGeode,
+                                minsLeft - 1
+                            )
+                        )
                         g
                     }
 
                     GeoNextState.Continue -> {
-                        simulate(GeoState(
-                            geostate.oreRobots,
-                            geostate.clayRobots,
-                            geostate.obsidianRobots,
-                            geostate.geodeRobots,
-                            currMaterials, minsLeft - 1))
+                        simulate(
+                            GeoState(
+                                geostate.oreRobots,
+                                geostate.clayRobots,
+                                geostate.obsidianRobots,
+                                geostate.geodeRobots,
+                                newOre,
+                                newClay,
+                                newObsidian,
+                                newGeode, minsLeft - 1
+                            )
+                        )
                     }
                 }
             }
 
-            currMaterials[ORE_IDX] -= geostate.oreRobots.toInt()
-            currMaterials[CLAY_IDX] -= geostate.clayRobots.toInt()
-            currMaterials[OBSIDIAN_IDX] -= geostate.obsidianRobots.toInt()
-            currMaterials[GEODE_IDX] -= geostate.geodeRobots.toInt()
-
-            cache[geostate.createCopy()] = maxGeos
+            cache[geostate] = maxGeos
 
             return maxGeos
         }
@@ -236,14 +231,15 @@ fun main() {
 
         val blueprintToBestGeos = blueprints.map {
             val simulator = GeoSimulator(it)
-            val bestGeos = simulator.simulate(GeoState(
-                1,
-                0,
-                0,
-                0,
-                IntArray(NUM_MATERIALS) { 0 },
-                24
-            )
+            val bestGeos = simulator.simulate(
+                GeoState(
+                    1,
+                    0,
+                    0,
+                    0,
+                    0, 0, 0, 0,
+                    24
+                )
             )
             it to bestGeos
         }
@@ -274,16 +270,19 @@ fun main() {
         //        )
 
         val product = blueprints.take(3).map {
+            println(it)
             val simulator = GeoSimulator(it)
-            val bestGeos = simulator.simulate(GeoState(
-                1,
-                0,
-                0,
-                0,
-                IntArray(NUM_MATERIALS) { 0 },
-                32
+            val bestGeos = simulator.simulate(
+                GeoState(
+                    1,
+                    0,
+                    0,
+                    0,
+                    0, 0, 0, 0,
+                    32
+                )
             )
-            )
+            println()
             bestGeos
         }.fold(1) { acc, i ->
             acc * i
@@ -300,11 +299,11 @@ fun main() {
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("${dayString}_test")
     //    part1(testInput)
-    part2(testInput)
+        part2(testInput)
 
     val input = readInput("${dayString}_input")
-    //            part1(input)
-    //            part2(input)
+//                part1(input)
+//    part2(input)
 }
 
 
