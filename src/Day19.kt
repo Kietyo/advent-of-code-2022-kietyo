@@ -1,3 +1,7 @@
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.runBlocking
 import kotlin.time.Duration.Companion.milliseconds
 
 data class RobotSpec(
@@ -32,6 +36,22 @@ const val NUM_MATERIALS = 4
 const val SHORT_ZERO = 0.toShort()
 const val SHORT_ONE = 1.toShort()
 
+@OptIn(ExperimentalCoroutinesApi::class)
+fun <T, R> List<T>.parallelMap(transform: (T) -> R): List<R> {
+    return runBlocking {
+        val jobs = this@parallelMap.map {
+            async {
+                transform(it)
+            }
+        }
+
+        jobs.joinAll()
+
+        return@runBlocking jobs.map { it.getCompleted() }
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
 fun main() {
 
     val materialToIndex = listOf(
@@ -171,9 +191,7 @@ fun main() {
                 return cache[geostate]!!
             }
 
-            val nextStates = getNextStates(
-                geostate
-            )
+            val nextStates = getNextStates(geostate)
 
             val newOre = (geostate.ore + geostate.oreRobots).toShort()
             val newClay = (geostate.clay + geostate.clayRobots).toShort()
@@ -229,8 +247,9 @@ fun main() {
 
         println(blueprints.joinToString("\n"))
 
-        val blueprintToBestGeos = blueprints.map {
-            val simulator = GeoSimulator(it)
+        val sumQualityScores = blueprints.parallelMap {
+            val blueprint = it
+            val simulator = GeoSimulator(blueprint)
             val bestGeos = simulator.simulate(
                 GeoState(
                     1,
@@ -241,16 +260,34 @@ fun main() {
                     24
                 )
             )
-            it to bestGeos
-        }
-
-        val sumQualityScores = blueprintToBestGeos.sumOf {
+            blueprint to bestGeos
+        }.sumOf {
             it.first.id * it.second
         }
 
         val endTime = System.currentTimeMillis()
         println("sumQualityScores: $sumQualityScores")
         println((endTime - startTime).milliseconds)
+
+        //        val blueprintToBestGeos = blueprints.map {
+        //            val simulator = GeoSimulator(it)
+        //            val bestGeos = simulator.simulate(
+        //                GeoState(
+        //                    1,
+        //                    0,
+        //                    0,
+        //                    0,
+        //                    0, 0, 0, 0,
+        //                    24
+        //                )
+        //            )
+        //            it to bestGeos
+        //        }
+        //
+        //        val sumQualityScores = blueprintToBestGeos.sumOf {
+        //            it.first.id * it.second
+        //        }
+
     }
 
     fun part2(input: List<String>): Unit {
@@ -269,7 +306,7 @@ fun main() {
         //            32)
         //        )
 
-        val product = blueprints.take(3).map {
+        val product = blueprints.take(3).parallelMap {
             println(it)
             val simulator = GeoSimulator(it)
             val bestGeos = simulator.simulate(
@@ -298,12 +335,12 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("${dayString}_test")
-    //    part1(testInput)
-        part2(testInput)
+    //        part1(testInput)
+    //        part2(testInput)
 
     val input = readInput("${dayString}_input")
-//                part1(input)
-//    part2(input)
+//    part1(input)
+        part2(input)
 }
 
 
