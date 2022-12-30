@@ -35,10 +35,10 @@ fun <T> List<T>.getCyclic(idx: Int): T {
 enum class Direction(
     val movementOffset: IntPoint,
 ) {
-    LEFT(-1 toip 0),
-    UP(0 toip -1),
     RIGHT(1 toip 0),
-    DOWN(0 toip 1);
+    DOWN(0 toip 1),
+    LEFT(-1 toip 0),
+    UP(0 toip -1);
 
     fun getNextDirectionClockwise(): Direction {
         return Direction.values().getCyclic(ordinal + 1)
@@ -52,8 +52,21 @@ enum class Direction(
 fun Grid<Char>.getNextPoint(
     currPoint: IntPoint,
     direction: Direction
-) {
-
+): IntPoint {
+    val offset = direction.movementOffset
+    val clone = currPoint.clone()
+    while (true) {
+        clone.inPlaceAdd(offset)
+        val c = getCyclicOrDefault(clone.x, clone.y) {
+            ' '
+        }
+        if (c == '.') {
+            clone.x = normalizeIndex(clone.x, maxColumns)
+            clone.y = normalizeIndex(clone.y, maxRows)
+            return clone
+        }
+        if (c == '#') return currPoint
+    }
 }
 
 fun main() {
@@ -71,10 +84,23 @@ fun main() {
         }
         println(commands)
 
-        val currPoint = 0 toip grid.getRow(0).indexOfFirst {
+        var currPoint: IntPoint = grid.getRow(0).indexOfFirst {
             it == '.'
-        }
+        } toip 0
+
         var currDirection = Direction.RIGHT
+
+//        println(currPoint)
+//
+//        val nextPointRight = grid.getNextPoint(currPoint, Direction.RIGHT)
+//        val nextPointDown = grid.getNextPoint(currPoint, Direction.DOWN)
+//        val nextPointLeft = grid.getNextPoint(currPoint, Direction.LEFT)
+//        val nextPointUp = grid.getNextPoint(currPoint, Direction.UP)
+//
+//        println("nextPointRight: $nextPointRight")
+//        println("nextPointDown: $nextPointDown")
+//        println("nextPointLeft: $nextPointLeft")
+//        println("nextPointUp: $nextPointUp")
 
         for (command in commands) {
             val numOrNull = command.toIntOrNull()
@@ -86,15 +112,19 @@ fun main() {
                         else -> TODO()
                     }
                 }
-
                 else -> {
-                    val num = numOrNull!!
-
+                    val numTimesToMove = numOrNull!!
+                    repeat(numTimesToMove) {
+                        currPoint = grid.getNextPoint(currPoint, currDirection)
+                    }
                 }
             }
         }
 
-        println(currPoint)
+        val score = (1000 * currPoint.y.inc()) + 4 * currPoint.x.inc() + currDirection.ordinal
+        println("currPoint: $currPoint, currDirection: $currDirection, score: $score")
+
+
     }
 
     fun part2(input: List<String>): Unit {
@@ -105,11 +135,11 @@ fun main() {
 
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("${dayString}_test")
-    part1(testInput)
+//    part1(testInput)
     //    part2(testInput)
 
     val input = readInput("${dayString}_input")
-    //        part1(input)
+            part1(input)
     //        part2(input)
 }
 

@@ -41,7 +41,10 @@ class Grid<T : Any>(
     operator fun get(x: Int, y: Int): T {
         return data[y][x]
     }
-    fun getCyclic(x: Int, y: Int) {
+    fun getCyclicOrDefault(x: Int, y: Int, default: () -> T): T {
+        val yNormalize = normalizeIndex(y, maxRows)
+        val xNormalize = normalizeIndex(x, maxColumns)
+        return getOrDefault(xNormalize, yNormalize, default)
     }
 
     fun getRow(y: Int): Array<T> {
@@ -49,9 +52,13 @@ class Grid<T : Any>(
         return data[y]
     }
 
-    fun getOrDefault(point: MutableIntPoint, default: () -> T): T {
-        return data.getOrNull(point.second)?.getOrNull(point.first)
+    fun getOrDefault(x: Int, y: Int, default: () -> T): T {
+        return data.getOrNull(y)?.getOrNull(x)
             ?: default()
+    }
+
+    fun getOrDefault(point: MutableIntPoint, default: () -> T): T {
+        return getOrDefault(point.x, point.y, default)
     }
 
     fun forEach(fn: (x: Int, y: Int, value: T, gotNextRow: Boolean) -> Unit) {
@@ -172,6 +179,12 @@ infix fun Int.toip(y: Int) = MutableIntPoint(this to y)
 interface IntPoint {
     val x: Int
     val y: Int
+
+    operator fun plus(other: IntPoint) = MutableIntPoint(x + other.x, y + other.y)
+
+    fun clone(): MutableIntPoint {
+        return MutableIntPoint(x, y)
+    }
 }
 
 data class MutableIntPoint(
@@ -188,6 +201,11 @@ data class MutableIntPoint(
     val oneDown get() = MutableIntPoint(x, y + 1)
     val oneDownOneLeft get() = MutableIntPoint(x - 1, y + 1)
     val oneDownOneRight get() = MutableIntPoint(x + 1, y + 1)
+
+    fun inPlaceAdd(other: IntPoint) {
+        x += other.x
+        y += other.y
+    }
 
     fun manhattanDistance(other: MutableIntPoint): Int {
         return manhattanDistance(other.x, other.y)
