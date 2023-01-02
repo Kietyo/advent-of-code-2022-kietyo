@@ -42,62 +42,100 @@ enum class Rotation {
 data class SideRotationTranslation(
     val sourceSide: Int,
     val destinationSide: Int,
-    val rotation: Rotation,
-    val directionFromSource: Direction
+    val directionFromSource: Direction,
+    val rotation: Rotation
 ) {
-//    fun translateSourceToDest(direction: Direction): Direction {
-//        var currDirection = direction
-//        for (rotation in rotations) {
-//            currDirection = when (rotation) {
-//                Rotation.CLOCKWISE -> currDirection.getNextDirectionClockwise()
-//                Rotation.COUNTER_CLOCKWISE -> currDirection.getNextDirectionCounterClockwise()
-//            }
-//        }
-//        return currDirection
-//    }
-//
-//    fun translateDestToSource(direction: Direction): Direction {
-//        var currDirection = direction
-//        for (rotation in rotations.reversed()) {
-//            currDirection = when (rotation) {
-//                Rotation.CLOCKWISE -> currDirection.getNextDirectionCounterClockwise()
-//                Rotation.COUNTER_CLOCKWISE -> currDirection.getNextDirectionClockwise()
-//            }
-//        }
-//        return currDirection
-//    }
+    //    fun translateSourceToDest(direction: Direction): Direction {
+    //        var currDirection = direction
+    //        for (rotation in rotations) {
+    //            currDirection = when (rotation) {
+    //                Rotation.CLOCKWISE -> currDirection.getNextDirectionClockwise()
+    //                Rotation.COUNTER_CLOCKWISE -> currDirection.getNextDirectionCounterClockwise()
+    //            }
+    //        }
+    //        return currDirection
+    //    }
+    //
+    //    fun translateDestToSource(direction: Direction): Direction {
+    //        var currDirection = direction
+    //        for (rotation in rotations.reversed()) {
+    //            currDirection = when (rotation) {
+    //                Rotation.CLOCKWISE -> currDirection.getNextDirectionCounterClockwise()
+    //                Rotation.COUNTER_CLOCKWISE -> currDirection.getNextDirectionClockwise()
+    //            }
+    //        }
+    //        return currDirection
+    //    }
 }
 
-val rotationList = listOf(
-    SideRotationTranslation(1, 2, Rotation.HALF_ROTATION, Direction.UP),
-    SideRotationTranslation(1, 3, Rotation.COUNTER_CLOCKWISE, Direction.LEFT),
-    SideRotationTranslation(1, 4, Rotation.NONE, Direction.DOWN),
-    SideRotationTranslation(1, 6, Rotation.HALF_ROTATION, Direction.RIGHT),
+val TEST_ROTATION_LIST = listOf(
+    SideRotationTranslation(1, 2, Direction.UP, Rotation.HALF_ROTATION),
+    SideRotationTranslation(1, 3, Direction.LEFT, Rotation.COUNTER_CLOCKWISE),
+    SideRotationTranslation(1, 4, Direction.DOWN, Rotation.NONE),
+    SideRotationTranslation(1, 6, Direction.RIGHT, Rotation.HALF_ROTATION),
 
-    SideRotationTranslation(2, 1, Rotation.HALF_ROTATION, Direction.UP),
-    SideRotationTranslation(2, 3, Rotation.NONE, Direction.RIGHT),
-    SideRotationTranslation(2, 5, Rotation.HALF_ROTATION, Direction.DOWN),
-    SideRotationTranslation(2, 6, Rotation.CLOCKWISE, Direction.LEFT),
+    SideRotationTranslation(2, 1, Direction.UP, Rotation.HALF_ROTATION),
+    SideRotationTranslation(2, 3, Direction.RIGHT, Rotation.NONE),
+    SideRotationTranslation(2, 5, Direction.DOWN, Rotation.HALF_ROTATION),
+    SideRotationTranslation(2, 6, Direction.LEFT, Rotation.CLOCKWISE),
 
-    SideRotationTranslation(3, 2, Rotation.NONE, Direction.LEFT),
-    SideRotationTranslation(3, 1, Rotation.CLOCKWISE, Direction.UP),
-    SideRotationTranslation(3, 4, Rotation.NONE, Direction.RIGHT),
-    SideRotationTranslation(3, 5, Rotation.COUNTER_CLOCKWISE, Direction.DOWN),
+    SideRotationTranslation(3, 2, Direction.LEFT, Rotation.NONE),
+    SideRotationTranslation(3, 1, Direction.UP, Rotation.CLOCKWISE),
+    SideRotationTranslation(3, 4, Direction.RIGHT, Rotation.NONE),
+    SideRotationTranslation(3, 5, Direction.DOWN, Rotation.COUNTER_CLOCKWISE),
 
-    SideRotationTranslation(4, 1, Rotation.NONE, Direction.UP),
-    SideRotationTranslation(4, 3, Rotation.NONE, Direction.LEFT),
-    SideRotationTranslation(4, 5, Rotation.NONE, Direction.DOWN),
-    SideRotationTranslation(4, 6, Rotation.CLOCKWISE, Direction.RIGHT),
+    SideRotationTranslation(4, 1, Direction.UP, Rotation.NONE),
+    SideRotationTranslation(4, 3, Direction.LEFT, Rotation.NONE),
+    SideRotationTranslation(4, 5, Direction.DOWN, Rotation.NONE),
+    SideRotationTranslation(4, 6, Direction.RIGHT, Rotation.CLOCKWISE),
 
-    SideRotationTranslation(5, 3, Rotation.CLOCKWISE, Direction.LEFT),
-    SideRotationTranslation(5, 4, Rotation.NONE, Direction.UP),
-    SideRotationTranslation(5, 2, Rotation.HALF_ROTATION, Direction.DOWN),
-    SideRotationTranslation(5, 6, Rotation.NONE, Direction.RIGHT),
+    SideRotationTranslation(5, 3, Direction.LEFT, Rotation.CLOCKWISE),
+    SideRotationTranslation(5, 4, Direction.UP, Rotation.NONE),
+    SideRotationTranslation(5, 2, Direction.DOWN, Rotation.HALF_ROTATION),
+    SideRotationTranslation(5, 6, Direction.RIGHT, Rotation.NONE),
 
-    SideRotationTranslation(6, 5, Rotation.NONE, Direction.LEFT),
-    SideRotationTranslation(6, 4, Rotation.COUNTER_CLOCKWISE, Direction.UP),
-    SideRotationTranslation(6, 1, Rotation.HALF_ROTATION, Direction.RIGHT),
-    SideRotationTranslation(6, 2, Rotation.COUNTER_CLOCKWISE, Direction.DOWN),
+    SideRotationTranslation(6, 5, Direction.LEFT, Rotation.NONE),
+    SideRotationTranslation(6, 4, Direction.UP, Rotation.COUNTER_CLOCKWISE),
+    SideRotationTranslation(6, 1, Direction.RIGHT, Rotation.HALF_ROTATION),
+    SideRotationTranslation(6, 2, Direction.DOWN, Rotation.COUNTER_CLOCKWISE),
+)
+
+val INPUT_ROTATION_LIST = listOf(
+    // checked
+    SideRotationTranslation(1, 6, Direction.UP, Rotation.CLOCKWISE),
+    SideRotationTranslation(1, 4, Direction.LEFT, Rotation.HALF_ROTATION),
+    SideRotationTranslation(1, 3, Direction.DOWN, Rotation.NONE),
+    SideRotationTranslation(1, 2, Direction.RIGHT, Rotation.NONE),
+
+    // checked
+    SideRotationTranslation(2, 6, Direction.UP, Rotation.NONE),
+    SideRotationTranslation(2, 1, Direction.LEFT, Rotation.NONE),
+    SideRotationTranslation(2, 3, Direction.DOWN, Rotation.CLOCKWISE),
+    SideRotationTranslation(2, 5, Direction.RIGHT, Rotation.HALF_ROTATION),
+
+    // checked
+    SideRotationTranslation(3, 1, Direction.UP, Rotation.NONE),
+    SideRotationTranslation(3, 4, Direction.LEFT, Rotation.COUNTER_CLOCKWISE),
+    SideRotationTranslation(3, 5, Direction.DOWN, Rotation.NONE),
+    SideRotationTranslation(3, 2, Direction.RIGHT, Rotation.COUNTER_CLOCKWISE),
+
+    // checked
+    SideRotationTranslation(4, 3, Direction.UP, Rotation.CLOCKWISE),
+    SideRotationTranslation(4, 1, Direction.LEFT, Rotation.HALF_ROTATION),
+    SideRotationTranslation(4, 6, Direction.DOWN, Rotation.NONE),
+    SideRotationTranslation(4, 5, Direction.RIGHT, Rotation.NONE),
+
+    // checked
+    SideRotationTranslation(5, 3, Direction.UP, Rotation.NONE),
+    SideRotationTranslation(5, 4, Direction.LEFT, Rotation.NONE),
+    SideRotationTranslation(5, 6, Direction.DOWN, Rotation.CLOCKWISE),
+    SideRotationTranslation(5, 2, Direction.RIGHT, Rotation.HALF_ROTATION),
+
+    //
+    SideRotationTranslation(6, 4, Direction.UP, Rotation.NONE),
+    SideRotationTranslation(6, 1, Direction.LEFT, Rotation.COUNTER_CLOCKWISE),
+    SideRotationTranslation(6, 2, Direction.DOWN, Rotation.NONE),
+    SideRotationTranslation(6, 5, Direction.RIGHT, Rotation.COUNTER_CLOCKWISE),
 )
 
 enum class Direction(
@@ -144,8 +182,8 @@ data class Region(
 
 val CREATE_TEST_REGION_FN = { cubeLength: Int ->
     listOf(
-        Region(1, ((cubeLength * 2) until (cubeLength * 3)), (0 until cubeLength)),
-        Region(2, (0 until cubeLength), (cubeLength until (cubeLength * 2))),
+        Region(1, ((cubeLength * 2) until (cubeLength * 3)), (cubeLength * 0 until cubeLength)),
+        Region(2, (cubeLength * 0 until cubeLength), (cubeLength until (cubeLength * 2))),
         Region(3, ((cubeLength) until (cubeLength * 2)), (cubeLength until (cubeLength * 2))),
         Region(4, ((cubeLength * 2) until (cubeLength * 3)), (cubeLength until (cubeLength * 2))),
         Region(
@@ -161,35 +199,62 @@ val CREATE_TEST_REGION_FN = { cubeLength: Int ->
     )
 }
 
+val CREATE_INPUT_REGION_FN = { cubeLength: Int ->
+    listOf(
+        Region(1, ((cubeLength * 1) until (cubeLength * 2)), (0 until cubeLength)),
+        Region(2, (cubeLength * 2 until (cubeLength * 3)), (0 until cubeLength)),
+        Region(3, ((cubeLength * 1) until (cubeLength * 2)), (cubeLength until (cubeLength * 2))),
+        Region(4, (0 until cubeLength), (cubeLength * 2 until (cubeLength * 3))),
+        Region(5, (cubeLength until cubeLength * 2), (cubeLength * 2 until (cubeLength * 3))),
+        Region(6, (0 until cubeLength), (cubeLength * 3 until (cubeLength * 4))),
+    )
+}
+
 fun calculatePointRelativeToDestinationRegion(
     sourcePointWithRespectToRegion: IntPoint,
     cubeLength: Int,
     directionFromSourceToDest: Direction,
     destRotationRelativeToSource: Rotation
-) {
-    when (directionFromSourceToDest) {
+): MutableIntPoint {
+    return when (directionFromSourceToDest) {
         Direction.RIGHT -> when (destRotationRelativeToSource) {
-            Rotation.NONE -> null
-            Rotation.CLOCKWISE -> TODO()
-            Rotation.COUNTER_CLOCKWISE -> TODO()
-            Rotation.HALF_ROTATION -> cubeLength - 1 toip cubeLength - 1 - sourcePointWithRespectToRegion.y
+            Rotation.NONE -> 0 toip sourcePointWithRespectToRegion.y // checked
+            Rotation.CLOCKWISE -> cubeLength - sourcePointWithRespectToRegion.y - 1 toip 0 // checked
+            Rotation.COUNTER_CLOCKWISE -> sourcePointWithRespectToRegion.y toip cubeLength - 1 // checked
+            Rotation.HALF_ROTATION -> cubeLength - 1 toip cubeLength - 1 - sourcePointWithRespectToRegion.y // checked
         }
-        Direction.DOWN -> TODO()
-        Direction.LEFT -> TODO()
-        Direction.UP -> TODO()
+
+        Direction.DOWN -> when (destRotationRelativeToSource) {
+            Rotation.NONE -> sourcePointWithRespectToRegion.x toip 0 // checked
+            Rotation.CLOCKWISE -> cubeLength - 1 toip sourcePointWithRespectToRegion.x
+            Rotation.COUNTER_CLOCKWISE -> 0 toip cubeLength - sourcePointWithRespectToRegion.x - 1 // checked
+            Rotation.HALF_ROTATION -> cubeLength - sourcePointWithRespectToRegion.x - 1 toip cubeLength - 1 // checked
+        }
+
+        Direction.LEFT -> when (destRotationRelativeToSource) {
+            Rotation.NONE -> cubeLength - 1 toip sourcePointWithRespectToRegion.y // checked
+            Rotation.CLOCKWISE -> cubeLength - sourcePointWithRespectToRegion.y - 1 toip cubeLength - 1 // checked
+            Rotation.COUNTER_CLOCKWISE -> sourcePointWithRespectToRegion.y toip 0 // fixed
+            Rotation.HALF_ROTATION -> 0 toip cubeLength - 1 - sourcePointWithRespectToRegion.y // checked
+        }
+
+        Direction.UP -> when (destRotationRelativeToSource) {
+            Rotation.NONE -> sourcePointWithRespectToRegion.x toip cubeLength - 1 // checked
+            Rotation.CLOCKWISE -> 0 toip sourcePointWithRespectToRegion.x // fixed
+            Rotation.COUNTER_CLOCKWISE -> cubeLength - 1 toip cubeLength - sourcePointWithRespectToRegion.x - 1 // checked
+            Rotation.HALF_ROTATION -> cubeLength - 1 - sourcePointWithRespectToRegion.x toip 0
+        }
     }
 }
 
 data class CubeGrid(
     val grid: Grid<Char>,
-    val createRegionFn: (Int) -> List<Region>
+    val rotationList: List<SideRotationTranslation>,
+    val createRegionFn: (Int) -> List<Region>,
+    val cubeLength: Int = grid.maxRows / 3
 ) {
-    val cubeLength = grid.maxRows / 3
-    val regions: List<Region> = createRegionFn(cubeLength)
 
-    init {
-        println("went here?1")
-    }
+    val regions: List<Region> = createRegionFn(cubeLength)
 
     fun getPointWithRespectToRegion(point: IntPoint): Pair<Region, MutableIntPoint> {
         val regionRangeWithIndex = try {
@@ -231,60 +296,21 @@ data class CubeGrid(
             val translation = rotationList.first {
                 it.sourceSide == currRegion.id && direction == it.directionFromSource
             }
-            val pointRelativeToDestinationRegion = when {
-                (translation.sourceSide == 1 && translation.destinationSide == 3) ||
-                        (translation.sourceSide == 3 && translation.destinationSide == 1) -> {
-                    sourcePointWithRespectToRegion.y toip sourcePointWithRespectToRegion.x
-                }
-
-                (translation.sourceSide == 1 && translation.destinationSide == 2) ||
-                        (translation.sourceSide == 2 && translation.destinationSide == 1) -> {
-                    sourcePointWithRespectToRegion
-                }
-
-                (translation.sourceSide == 2 && translation.destinationSide == 5) ||
-                        (translation.sourceSide == 5 && translation.destinationSide == 2) -> {
-                    cubeLength - sourcePointWithRespectToRegion.x - 1 toip cubeLength - 1
-                }
-
-                (translation.sourceSide == 3 && translation.destinationSide == 5) ||
-                        (translation.sourceSide == 6 && translation.destinationSide == 2) -> {
-                    0 toip cubeLength - sourcePointWithRespectToRegion.x - 1
-                }
-
-                (translation.sourceSide == 5 && translation.destinationSide == 3) ||
-                        (translation.sourceSide == 2 && translation.destinationSide == 6) -> {
-                    cubeLength - sourcePointWithRespectToRegion.y - 1 toip cubeLength - 1
-                }
-
-                (translation.sourceSide == 1 && translation.destinationSide == 6) -> {
-                    cubeLength - 1 toip cubeLength - 1 - sourcePointWithRespectToRegion.y
-                }
-                (translation.sourceSide == 6 && translation.destinationSide == 1) -> {
-                    cubeLength - 1 toip cubeLength - 1 - sourcePointWithRespectToRegion.y
-                }
-
-                (translation.sourceSide == 4 && translation.destinationSide == 6) -> {
-                    cubeLength - sourcePointWithRespectToRegion.y - 1 toip 0
-                }
-
-                (translation.sourceSide == 6 && translation.destinationSide == 4) -> {
-                    cubeLength - 1 toip cubeLength - sourcePointWithRespectToRegion.x - 1
-                }
-
-                else -> null
-            }
+            val pointRelativeToDestinationRegion: MutableIntPoint =
+                calculatePointRelativeToDestinationRegion(
+                    sourcePointWithRespectToRegion, cubeLength, translation.directionFromSource,
+                    translation.rotation
+                )
 
             val destinationRegion = regions.first { it.id == translation.destinationSide }
-            val finalPoint = if (pointRelativeToDestinationRegion == null) newPoint else
-                destinationRegion.relativePointToWorldPoint(pointRelativeToDestinationRegion)
-            val finaldirection = if (pointRelativeToDestinationRegion == null) direction else
-                when (translation.rotation) {
-                    Rotation.CLOCKWISE -> direction.getNextDirectionClockwise()
-                    Rotation.COUNTER_CLOCKWISE -> direction.getNextDirectionCounterClockwise()
-                    Rotation.NONE -> direction
-                    Rotation.HALF_ROTATION -> direction.getNextDirectionClockwise().getNextDirectionClockwise()
-                }
+            val finalPoint = destinationRegion.relativePointToWorldPoint(pointRelativeToDestinationRegion)
+            val finaldirection = when (translation.rotation) {
+                Rotation.CLOCKWISE -> direction.getNextDirectionClockwise()
+                Rotation.COUNTER_CLOCKWISE -> direction.getNextDirectionCounterClockwise()
+                Rotation.NONE -> direction
+                Rotation.HALF_ROTATION -> direction.getNextDirectionClockwise()
+                    .getNextDirectionClockwise()
+            }
 
             val c = grid.getCyclicOrDefault(finalPoint.x, finalPoint.y) { ' ' }
             if (c == '.') {
@@ -293,7 +319,6 @@ data class CubeGrid(
                 return finalPoint to finaldirection
             }
             if (c == '#') return currPoint to direction
-
 
             println("Went here?!")
         }
@@ -372,7 +397,7 @@ fun main() {
 
     }
 
-    fun part2(input: List<String>): Unit {
+    fun part2(input: List<String>, isInput: Boolean): Unit {
         val gridLines = input.dropLast(2)
         val commandLine = input.last()
 
@@ -390,7 +415,13 @@ fun main() {
             it == '.'
         } toip 0
 
-        val cubeGrid = CubeGrid(grid, CREATE_TEST_REGION_FN)
+        val cubeGrid = if (isInput) CubeGrid(
+            grid,
+            INPUT_ROTATION_LIST,
+            CREATE_INPUT_REGION_FN,
+            cubeLength = 50
+        )
+        else CubeGrid(grid, TEST_ROTATION_LIST, CREATE_TEST_REGION_FN)
         var currDirection = Direction.RIGHT
         val path = mutableListOf(currPoint)
         val directions = mutableListOf(currDirection)
@@ -424,10 +455,10 @@ fun main() {
         }
 
         val score = (1000 * currPoint.y.inc()) + 4 * currPoint.x.inc() + currDirection.ordinal
-        println("currPoint: $currPoint, currDirection: $currDirection, score: $score")
         val zip = path.zip(directions)
         println("zip")
         println(zip.joinToString("\n"))
+        println("currPoint: $currPoint, currDirection: $currDirection, score: $score")
     }
 
     val dayString = "day22"
@@ -435,11 +466,14 @@ fun main() {
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("${dayString}_test")
     //        part1(testInput)
-    //    part2(testInput)
+    //        part2(testInput, false)
 
     val input = readInput("${dayString}_input")
     //                part1(input)
-    part2(input)
+
+    // 125079 - too high
+    // 182107 too high
+    part2(input, true)
 }
 
 
