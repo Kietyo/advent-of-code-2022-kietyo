@@ -25,6 +25,10 @@ class Grid<T : Any>(
     val maxRows = data.size
     val maxColumns = data.maxOf { it.size }
 
+    init {
+        println("maxRows: $maxRows, maxColumns: $maxColumns")
+    }
+
     fun getString(): String {
         val sb = StringBuilder()
         data.forEach {
