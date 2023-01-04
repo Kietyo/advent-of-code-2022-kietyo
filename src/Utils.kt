@@ -61,7 +61,7 @@ class Grid<T : Any>(
             ?: default()
     }
 
-    fun getOrDefault(point: MutableIntPoint, default: () -> T): T {
+    fun getOrDefault(point: IntPoint, default: () -> T): T {
         return getOrDefault(point.x, point.y, default)
     }
 
@@ -176,6 +176,28 @@ class Grid<T : Any>(
             source, pointToMinLengthFromSource, pointToPrev
         )
     }
+
+    fun count(predicate: (x: Int, y: Int, value: T) -> Boolean): Int {
+        var count = 0
+        forEach { x, y, value, gotNextRow ->
+            if (predicate(x, y, value)) count++
+        }
+        return count
+    }
+
+    data class GridElement<T> (val x: Int, val y: Int, val value: T) {
+        val point: IntPoint get() = MutableIntPoint(x, y)
+    }
+
+    fun elements(): List<GridElement<T>> {
+        val elements = mutableListOf<GridElement<T>>()
+
+        forEach { x, y, value, _ ->
+            elements.add(GridElement(x, y, value))
+        }
+
+        return elements
+    }
 }
 
 infix fun Int.toip(y: Int) = MutableIntPoint(this to y)
@@ -234,4 +256,21 @@ data class MutableIntPoint(
         return xComp
     }
 
+}
+
+enum class Direction(
+    val movementOffset: IntPoint,
+) {
+    RIGHT(1 toip 0),
+    DOWN(0 toip 1),
+    LEFT(-1 toip 0),
+    UP(0 toip -1);
+
+    fun getNextDirectionClockwise(): Direction {
+        return Direction.values().getCyclic(ordinal + 1)
+    }
+
+    fun getNextDirectionCounterClockwise(): Direction {
+        return Direction.values().getCyclic(ordinal - 1)
+    }
 }

@@ -138,23 +138,6 @@ val INPUT_ROTATION_LIST = listOf(
     SideRotationTranslation(6, 5, Direction.RIGHT, Rotation.COUNTER_CLOCKWISE),
 )
 
-enum class Direction(
-    val movementOffset: IntPoint,
-) {
-    RIGHT(1 toip 0),
-    DOWN(0 toip 1),
-    LEFT(-1 toip 0),
-    UP(0 toip -1);
-
-    fun getNextDirectionClockwise(): Direction {
-        return Direction.values().getCyclic(ordinal + 1)
-    }
-
-    fun getNextDirectionCounterClockwise(): Direction {
-        return Direction.values().getCyclic(ordinal - 1)
-    }
-}
-
 data class Region(
     val id: Int,
     val xRange: IntRange,
