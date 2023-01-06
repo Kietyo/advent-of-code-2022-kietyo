@@ -110,6 +110,9 @@ class ElfWorld(val elves: MutableMap<Int, MutableSet<Int>>) {
         }
     }
 }
+
+
+
 fun main() {
     fun part1(input: List<String>): Unit {
         println(input.joinToString("\n"))

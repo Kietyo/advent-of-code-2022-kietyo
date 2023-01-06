@@ -185,8 +185,17 @@ class Grid<T : Any>(
         return count
     }
 
+    fun filter(predicate: (x: Int, y: Int, value: T) -> Boolean): List<GridElement<T>> {
+        val elements = mutableListOf<GridElement<T>>()
+        forEach { x, y, value, gotNextRow ->
+            if (predicate(x, y, value)) elements.add(GridElement(x, y, value))
+        }
+        return elements
+    }
+
     data class GridElement<T> (val x: Int, val y: Int, val value: T) {
         val point: IntPoint get() = MutableIntPoint(x, y)
+        val asNewMutablePoint: MutableIntPoint get() = MutableIntPoint(x, y)
     }
 
     fun elements(): List<GridElement<T>> {
@@ -207,6 +216,7 @@ interface IntPoint {
     val y: Int
 
     operator fun plus(other: IntPoint) = MutableIntPoint(x + other.x, y + other.y)
+    operator fun times(multiplier: Int) = MutableIntPoint(x * multiplier, y * multiplier)
 
     fun clone(): MutableIntPoint {
         return MutableIntPoint(x, y)
@@ -256,6 +266,10 @@ data class MutableIntPoint(
         return xComp
     }
 
+}
+
+fun List<String>.toGrid(): Grid<Char> {
+    return Grid(this.map { it.toCharArray().toTypedArray() })
 }
 
 enum class Direction(
